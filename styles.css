@@ -454,23 +454,54 @@ h1 { font-size: clamp(1.35rem, 4vw, 2.35rem); line-height: 1.02; }
   margin-top: 14px;
 }
 .choice {
+  position: relative;
+  overflow: hidden;
   min-height: 96px;
   border: 0;
   border-radius: var(--radius);
   color: #fff;
-  box-shadow: 0 14px 26px var(--shadow);
+  background-size: 240% 240%;
+  box-shadow: 0 14px 26px var(--shadow), 0 0 22px rgba(255,255,255,0.18);
   display: grid;
   align-content: center;
   gap: 5px;
-  transition: transform 120ms ease, filter 120ms ease;
+  transition: transform 120ms ease, filter 120ms ease, box-shadow 120ms ease;
+  animation: buttonGradient 3.2s ease-in-out infinite, buttonPulse 1.35s ease-in-out infinite alternate;
 }
-.choice:active { transform: translateY(3px) scale(0.98); }
+.choice::after {
+  content: '';
+  position: absolute;
+  inset: -45%;
+  background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.38) 48%, transparent 62%);
+  transform: translateX(-42%) rotate(8deg);
+  animation: buttonShimmer 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+.choice:active { transform: translateY(3px) scale(0.98); filter: brightness(1.18); }
+.choice:hover { filter: brightness(1.08); }
+.choice span,
+.choice strong {
+  position: relative;
+  z-index: 1;
+}
 .choice span { font-size: 1.25rem; font-weight: 900; }
 .choice strong { font-size: 0.9rem; }
-.choice.pee { background: linear-gradient(180deg, #f8ca4f, #d89b18); color: #473200; }
-.choice.poop { background: linear-gradient(180deg, #ad7548, #754522); }
-.choice.try { background: linear-gradient(180deg, #6aa6ff, #315fa8); }
-.choice.calm { background: linear-gradient(180deg, #6fbd80, #3d8651); }
+.choice.pee { background-image: linear-gradient(135deg, #fff06a, #f8ca4f, #2d7d8f, #7d58ff); color: #342600; }
+.choice.poop { background-image: linear-gradient(135deg, #d3955f, #7d4a26, #2d7d8f, #f8c84e); }
+.choice.try { background-image: linear-gradient(135deg, #8fe6ff, #6aa6ff, #7958ff, #2d7d8f); }
+.choice.calm { background-image: linear-gradient(135deg, #95e6a6, #5eaa72, #2d7d8f, #f8c84e); }
+@keyframes buttonGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes buttonPulse {
+  to { box-shadow: 0 18px 34px var(--shadow), 0 0 30px rgba(143,230,255,0.46); }
+}
+@keyframes buttonShimmer {
+  0%, 28% { transform: translateX(-58%) rotate(8deg); opacity: 0; }
+  45% { opacity: 1; }
+  78%, 100% { transform: translateX(58%) rotate(8deg); opacity: 0; }
+}
 .number-panel, .quest-panel {
   margin-top: 14px;
   background: rgba(255,255,255,0.84);
