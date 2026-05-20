@@ -58,8 +58,34 @@
       </div>
     </section>
 
-    <details class="mode-panel">
-      <summary>Spot Match</summary>
+    <section class="mode-picker" aria-label="game modes">
+      <button type="button" class="mode-card active" data-mode="bingo">
+        <span>Bingo</span>
+        <strong>Number Calls</strong>
+      </button>
+      <button type="button" class="mode-card" data-mode="spot">
+        <span>Spot</span>
+        <strong>Shared Match</strong>
+      </button>
+      <button type="button" class="mode-card" data-mode="animal">
+        <span>Animal</span>
+        <strong>Puzzle Match</strong>
+      </button>
+      <button type="button" class="mode-card" data-mode="step">
+        <span>Step</span>
+        <strong>Safe Path</strong>
+      </button>
+      <button type="button" class="mode-card" data-mode="songs">
+        <span>Songs</span>
+        <strong>Break Cards</strong>
+      </button>
+    </section>
+
+    <div id="mode-bingo" class="mode-content active">
+      <p class="mode-note">Bingo is the main board above. Use Start Run, Track Card, or Next Clue.</p>
+    </div>
+
+    <div id="mode-spot" class="mode-content">
       <section class="spot-panel">
         <div class="spot-head">
           <div>
@@ -73,10 +99,9 @@
           <div id="spotCardB" class="spot-card"></div>
         </div>
       </section>
-    </details>
+    </div>
 
-    <details class="mode-panel">
-      <summary>Animal Puzzle Match</summary>
+    <div id="mode-animal" class="mode-content">
       <section class="animal-panel">
         <div class="spot-head">
           <div>
@@ -87,10 +112,9 @@
         </div>
         <div id="animalGrid" class="animal-grid" aria-label="animal matching cards"></div>
       </section>
-    </details>
+    </div>
 
-    <details class="mode-panel">
-      <summary>Step Safe</summary>
+    <div id="mode-step" class="mode-content">
       <section class="step-panel">
         <div class="spot-head">
           <div>
@@ -101,10 +125,9 @@
         </div>
         <div id="stepGrid" class="step-grid" aria-label="step safe number path"></div>
       </section>
-    </details>
+    </div>
 
-    <details class="mode-panel">
-      <summary>Song Break</summary>
+    <div id="mode-songs" class="mode-content">
       <section class="song-panel">
         <div class="song-head">
           <div>
@@ -130,7 +153,7 @@
           </a>
         </div>
       </section>
-    </details>
+    </div>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>

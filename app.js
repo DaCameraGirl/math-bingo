@@ -487,6 +487,15 @@ function toast(message) {
   toast.timer = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
+function showMode(mode) {
+  document.querySelectorAll('.mode-card').forEach((button) => {
+    button.classList.toggle('active', button.dataset.mode === mode);
+  });
+  document.querySelectorAll('.mode-content').forEach((panel) => {
+    panel.classList.toggle('active', panel.id === `mode-${mode}`);
+  });
+}
+
 $('startBtn').addEventListener('click', startRun);
 $('trackClueBtn').addEventListener('click', nextTrackClue);
 $('nextClueBtn').addEventListener('click', nextClue);
@@ -494,6 +503,9 @@ $('newCardBtn').addEventListener('click', newCard);
 $('newSpotBtn').addEventListener('click', newSpotMatch);
 $('newAnimalBtn').addEventListener('click', newAnimalPuzzle);
 $('newStepBtn').addEventListener('click', newStepPath);
+document.querySelectorAll('.mode-card').forEach((button) => {
+  button.addEventListener('click', () => showMode(button.dataset.mode));
+});
 $('soundBtn').addEventListener('click', () => {
   state.sound = !state.sound;
   save();

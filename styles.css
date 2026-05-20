@@ -223,6 +223,55 @@ button, .song-panel a {
   margin-top: 5px;
   line-height: 1.4;
 }
+.mode-picker {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.mode-card {
+  min-height: 86px;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  background: linear-gradient(160deg, #14212a, #0d171e);
+  border-color: rgba(88, 215, 255, 0.24);
+}
+.mode-card span {
+  color: var(--cyan);
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+.mode-card strong {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.mode-card.active {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, #ffc84a, #58d7ff, #6c5cff);
+  color: #061018;
+  box-shadow: 0 0 24px rgba(255, 200, 74, 0.3);
+}
+.mode-card.active span,
+.mode-card.active strong {
+  color: #061018;
+}
+.mode-content {
+  display: none;
+}
+.mode-content.active {
+  display: block;
+}
+.mode-note {
+  margin-top: 10px;
+  color: var(--muted);
+  background: rgba(17, 28, 36, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 800;
+}
 .spot-panel,
 .animal-panel {
   margin-top: 12px;
@@ -452,6 +501,7 @@ button, .song-panel a {
   .animal-grid { grid-template-columns: repeat(2, 1fr); }
   .song-grid { grid-template-columns: 1fr; }
   .step-grid { grid-template-columns: repeat(2, 1fr); }
+  .mode-picker { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 420px) {
   .app { padding-inline: 10px; }
