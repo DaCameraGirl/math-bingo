@@ -174,13 +174,6 @@ button, .song-panel a {
   border-color: rgba(96,217,120,0.72);
   color: #d8ffe0;
 }
-.cell.target-line {
-  border-color: rgba(255, 200, 74, 0.74);
-  box-shadow: inset 0 0 0 1px rgba(255, 200, 74, 0.28), 0 0 14px rgba(255, 200, 74, 0.14);
-}
-.cell.target-line:not(.marked) {
-  color: #fff4bf;
-}
 .cell.bingo {
   background:
     radial-gradient(circle, rgba(255,200,74,0.5), transparent 58%),

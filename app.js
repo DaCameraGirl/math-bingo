@@ -37,7 +37,6 @@ let animalFirst = null;
 let stepSafeCount = 0;
 let stepNeed = 5;
 let stepRule = null;
-let targetLine = [];
 
 const $ = (id) => document.getElementById(id);
 const board = $('board');
@@ -85,7 +84,6 @@ function renderStats() {
 function newCard() {
   card = uniqueNumbers(size * size, 1, 99);
   marked = new Set();
-  targetLine = bingoLines[rnd(0, bingoLines.length - 1)];
   active = false;
   current = null;
   board.innerHTML = '';
@@ -95,11 +93,10 @@ function newCard() {
     button.className = 'cell';
     button.textContent = value;
     button.dataset.index = index;
-    if (targetLine.includes(index)) button.classList.add('target-line');
     button.addEventListener('click', () => chooseCell(index));
     board.appendChild(button);
   });
-  setCall('Ready', 'Press Start Run.', 'Clear the highlighted line. Every clue points to that line.');
+  setCall('Ready', 'Press Start Run.', 'Mark called numbers. Five marked squares in any row, column, or diagonal wins.');
   renderStats();
 }
 
@@ -112,28 +109,26 @@ function startRun() {
 
 function nextClue() {
   if (!active) active = true;
-  const openTargets = targetLine.filter((index) => !marked.has(index));
-  if (!openTargets.length) {
+  const open = card.map((value, index) => ({ value, index })).filter((item) => !marked.has(item.index));
+  if (!open.length) {
     newCard();
     startRun();
     return;
   }
-  const targetIndex = openTargets[rnd(0, openTargets.length - 1)];
-  const answer = card[targetIndex];
+  const answer = open[rnd(0, open.length - 1)].value;
   current = makeClue(answer);
   setCall(current.type, current.text, current.hint);
 }
 
 function nextTrackClue() {
   if (!active) active = true;
-  const openTargets = targetLine.filter((index) => !marked.has(index));
-  if (!openTargets.length) {
+  const open = card.map((value, index) => ({ value, index })).filter((item) => !marked.has(item.index));
+  if (!open.length) {
     newCard();
     startRun();
     return;
   }
-  const targetIndex = openTargets[rnd(0, openTargets.length - 1)];
-  const answer = card[targetIndex];
+  const answer = open[rnd(0, open.length - 1)].value;
   current = makeTrackClue(answer);
   setCall(current.type, current.text, current.hint);
 }
