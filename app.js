@@ -174,7 +174,7 @@ function modeConfig(type) {
     pee: {
       name: 'Bladder Prime Run',
       icon: 'PRIME',
-      face: ':o',
+      face: 'PRIME',
       signal: 72,
       goal: 8 + level,
       duration: 30,
@@ -188,7 +188,7 @@ function modeConfig(type) {
     poop: {
       name: 'Bowel Factor Run',
       icon: 'FACT',
-      face: ':O',
+      face: 'FACT',
       signal: 86,
       goal: 9 + level,
       duration: 35,
@@ -202,13 +202,13 @@ function modeConfig(type) {
     try: {
       name: 'Approach Fibonacci Run',
       icon: 'FIBO',
-      face: ':|',
+      face: 'FIB',
       signal: 55,
       goal: 7 + level,
       duration: 30,
       countsPotty: true,
       reward: 1,
-      prompt: 'Tap Fibonacci numbers. This is a try-sit run.',
+      prompt: 'Tap Fibonacci numbers. This is an approach run.',
       accepts: (n) => FIBS.includes(n),
       correct: () => pick(FIBS),
       wrong: () => randomNonMember(FIBS, 2, 99)
@@ -216,7 +216,7 @@ function modeConfig(type) {
     calm: {
       name: 'Number Rush',
       icon: 'RUSH',
-      face: ':D',
+      face: 'RUSH',
       signal: 40,
       goal: 12 + level,
       duration: 40,
@@ -737,7 +737,7 @@ function bindEvents() {
     els.icon.textContent = '?';
     els.title.textContent = 'Choose a run';
     els.text.textContent = 'Tap Prime, Factor, Fibo, or Rush to start a number run.';
-    els.face.textContent = ':)';
+    els.face.textContent = 'SCAN';
     render();
   });
   $('soundBtn').addEventListener('click', () => {
