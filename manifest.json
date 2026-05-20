@@ -1,12 +1,11 @@
 ﻿{
-  "name": "Jaxon's Number Signal Lab",
-  "short_name": "Signal Lab",
-  "description": "A number arcade for toilet approach practice.",
+  "name": "Bingo Poo Number Board",
+  "short_name": "Bingo Poo",
+  "description": "A number bingo approach game with optional track-card clues.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#d8f3ee",
-  "theme_color": "#2d7d8f",
+  "background_color": "#0b1117",
+  "theme_color": "#101820",
   "orientation": "portrait-primary",
   "icons": []
 }
-

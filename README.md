@@ -1,27 +1,13 @@
-﻿# Jaxon's Number Signal Lab
+﻿# Bingo Poo Number Board
 
-A separate static prototype for a number-forward toilet approach game.
+A simple number-bingo approach game.
 
-## Concept
+## Game Loop
 
-The app focuses on body-signal awareness and toilet approach practice without shame or alarms:
+- Press Start Run.
+- Solve one clue at a time.
+- Tap the matching number on the 5x5 board.
+- Complete a row, column, or diagonal for Bingo.
+- Use Track Card mode for zookeeper-style evidence clues inspired by track-matching card games, without copying licensed art or branding.
 
-- Pick the closest signal run: bladder, bowel, approach, or number rush.
-- Tap correct moving numbers before the timer ends.
-- Earn prime credits for clearing number runs and approaching the toilet target.
-- Use the Number Lab for primes, factors, Fibonacci, triangular numbers, modulo, equations, prime gaps, and bonus prime-credit puzzles.
-- Turn on Trails or Trails + Flash for moving number effects and pointer-following prime trails.
-- Use the Adult panel for reminder timing, completion phrase, sound, level, effects, and low stimulation mode.
-
-## Files
-
-- `index.html` - static app shell
-- `styles.css` - bathroom scene, responsive layout, low stimulation mode
-- `app.js` - localStorage progress, interactions, reminders, rewards
-- `manifest.json` - PWA metadata
-
-Open `index.html` directly or publish the folder with GitHub Pages.
-
-
-
-
+Song links are optional YouTube breaks and open externally.

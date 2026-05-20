@@ -1,189 +1,113 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#2d7d8f">
+  <meta name="theme-color" content="#101820">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Number Signal Lab">
+  <meta name="apple-mobile-web-app-title" content="Bingo Poo">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css">
-  <title>Jaxon's Number Signal Lab</title>
+  <title>Bingo Poo Number Board</title>
 </head>
 <body>
-  <main class="app-shell">
+  <main class="app">
     <header class="topbar">
-      <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle sound">Sound</button>
-      <div class="brand-lockup">
-        <span class="kicker">Body Signal Lab</span>
-        <h1>Jaxon's Number Signal Lab</h1>
+      <button id="soundBtn" type="button">Sound On</button>
+      <div>
+        <span>Number Logic Game</span>
+        <h1>Bingo Poo</h1>
       </div>
-      <button class="icon-btn" id="settingsBtn" type="button" aria-label="Open settings">Adult</button>
+      <button id="newCardBtn" type="button">New Card</button>
     </header>
 
-    <section class="hero-stage" aria-label="Game stage">
-      <div class="status-strip">
-        <div>
-          <span class="label">Today</span>
-          <strong id="todayCount">0</strong>
-        </div>
-        <div>
-          <span class="label">Prime Credits</span>
-          <strong id="stickerCount">0</strong>
-        </div>
-        <div>
-          <span class="label">Number Wins</span>
-          <strong id="mathWinCount">0</strong>
+    <section class="scorebar" aria-label="score">
+      <div><span>Wins</span><strong id="wins">0</strong></div>
+      <div><span>Credits</span><strong id="credits">0</strong></div>
+      <div><span>Marked</span><strong id="marked">0</strong></div>
+      <div><span>Streak</span><strong id="streak">0</strong></div>
+    </section>
+
+    <section class="game">
+      <div class="call-panel">
+        <span id="callType">Ready</span>
+        <h2 id="callText">Press Start Run.</h2>
+        <p id="callHint">Solve the clue, tap the answer on the board, and complete a row, column, or diagonal.</p>
+        <div class="actions">
+          <button id="startBtn" class="primary" type="button">Start Run</button>
+          <button id="trackClueBtn" type="button">Track Card</button>
+          <button id="nextClueBtn" type="button">Next Clue</button>
         </div>
       </div>
 
-      <div class="bathroom-scene" id="scene">
-                <div id="numberRain" class="number-rain" aria-hidden="true"></div>
-        <div class="number-orbit" aria-hidden="true">
-          <span>2</span><span>3</span><span>5</span><span>7</span><span>11</span><span>13</span><span>17</span><span>19</span>
+      <div class="board-wrap">
+        <div class="letters" aria-hidden="true">
+          <span>B</span><span>I</span><span>N</span><span>G</span><span>O</span>
         </div>
-        <div class="window-scene" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </div>
-                <div class="game-hud" aria-label="Game status">
-          <div><span>Mode</span><strong id="gameMode">Ready</strong></div>
-          <div><span>Time</span><strong id="gameTime">30</strong></div>
-          <div><span>Score</span><strong id="gameScore">0</strong></div>
-          <div><span>Goal</span><strong id="gameGoal">8</strong></div>
-        </div>
-        <div id="gameBanner" class="game-banner">
-          <strong>Number Approach Run</strong>
-          <span>Choose a signal run. Tap correct numbers into the toilet target.</span>
-        </div>
-        <div class="body-meter" aria-label="Body signal meter">
-          <div class="meter-title">Body Signal</div>
-          <div class="meter-track"><div id="signalFill"></div></div>
-          <div id="signalText" class="meter-copy">calm body</div>
-        </div>
-        <button class="character" id="character" type="button" aria-label="Check body signal">
-          <span class="face" id="face">SCAN</span>
-          <span class="shirt">CORE</span>
-        </button>
-        <div class="potty" id="potty" aria-label="Toilet target">
-          <div class="tank"></div>
-          <div class="seat"></div>
-          <div class="bowl"><span id="bowlGlow"></span></div>
-          <div class="base"></div>
-        </div>
-        <div id="floatLayer" class="float-layer" aria-hidden="true"></div>
-      </div>
-
-      <div class="mission-card" id="missionCard">
-        <span class="mission-icon" id="missionIcon">?</span>
-        <div>
-          <h2 id="missionTitle">Choose a signal run</h2>
-                    <p id="missionText">Use number rules to move body signals toward the toilet target.</p>
-          <div class="hero-math">
-            <span id="heroChallengeType">Prime Code</span>
-            <strong id="heroChallengeLine">Loading number puzzle...</strong>
-          </div>
-        </div>
+        <div id="board" class="board" aria-label="Bingo number board"></div>
       </div>
     </section>
 
-    <section class="controls" aria-label="Game controls">
-      <button class="choice pee" type="button" data-signal="pee">
-        <span>Prime</span>
-        <strong>Bladder Signal</strong>
-      </button>
-      <button class="choice poop" type="button" data-signal="poop">
-        <span>Factor</span>
-        <strong>Bowel Signal</strong>
-      </button>
-      <button class="choice try" type="button" data-signal="try">
-        <span>Fibo</span>
-        <strong>Approach Run</strong>
-      </button>
-      <button class="choice calm" type="button" data-signal="calm">
-        <span>Rush</span>
-        <strong>Number Rush</strong>
-      </button>
+    <section class="target-panel">
+      <div class="target" id="target" aria-hidden="true">
+        <span></span>
+      </div>
+      <div>
+        <h2>Toilet Target</h2>
+        <p>When Bingo lands, the board clears as a completed approach run.</p>
+      </div>
     </section>
 
-    <section class="number-panel" aria-label="Number lab">
-      <div class="quest-header">
-        <h2>Number Lab</h2>
-        <button id="newNumberBtn" type="button">Start Rush</button>
-      </div>
-      <div class="number-stats">
-        <div><span class="label">Runs</span><strong id="missionNumber">0</strong></div>
-        <div><span class="label">Next Prime</span><strong id="nextPrimeNumber">2</strong></div>
-        <div><span class="label">Factor Code</span><strong id="factorCode">1</strong></div>
-        <div><span class="label">Combo</span><strong id="comboCount">0</strong></div>
-      </div>
-      <div class="number-strip" id="numberStrip" aria-label="Number sequence trail"></div>
-      <div class="number-challenge">
-        <div class="challenge-meta">
-          <span id="challengeType">Pattern</span>
-          <span id="challengeLevel">Level 1</span>
+    <section class="spot-panel">
+      <div class="spot-head">
+        <div>
+          <h2>Spot Match</h2>
+          <p>Find the one shared number or track mark between both cards.</p>
         </div>
-        <p id="numberQuestion">Clear a signal run to unlock another number puzzle.</p>
-        <div class="number-choices" id="numberChoices"></div>
+        <button id="newSpotBtn" type="button">New Match</button>
+      </div>
+      <div class="spot-cards">
+        <div id="spotCardA" class="spot-card"></div>
+        <div id="spotCardB" class="spot-card"></div>
       </div>
     </section>
 
-    <section class="quest-panel">
-      <div class="quest-header">
-        <h2>Prime Credit Path</h2>
-        <button id="resetRoundBtn" type="button">New Run</button>
+    <section class="coop-panel">
+      <div class="spot-head">
+        <div>
+          <h2>Count Home</h2>
+          <p>Cooperative counting route. Count the dots and move the token to the target.</p>
+        </div>
+        <button id="coopRollBtn" type="button">Count Move</button>
       </div>
-      <div class="sticker-grid" id="stickerGrid" aria-label="Earned prime credits"></div>
+      <div class="coop-track" id="coopTrack" aria-label="cooperative counting track"></div>
+      <div class="coop-call">
+        <strong id="coopCount">0</strong>
+        <span id="coopText">Press Count Move.</span>
+      </div>
+    </section>
+
+    <section class="animal-panel">
+      <div class="spot-head">
+        <div>
+          <h2>Animal Puzzle Match</h2>
+          <p>Match each animal card to its number fact card.</p>
+        </div>
+        <button id="newAnimalBtn" type="button">New Puzzle</button>
+      </div>
+      <div id="animalGrid" class="animal-grid" aria-label="animal matching cards"></div>
+    </section>
+
+    <section class="song-panel">
+      <h2>Optional Song Break</h2>
+      <div>
+        <a href="https://www.youtube.com/watch?v=jkbb7aoYqTU" target="_blank" rel="noopener noreferrer">JunyTony Poo Poo Song</a>
+        <a href="https://www.youtube.com/results?search_query=Hello+Cocobi+Potty+Song+Compilation" target="_blank" rel="noopener noreferrer">Hello Cocobi Potty Songs</a>
+      </div>
     </section>
   </main>
 
-  <dialog class="settings" id="settingsDialog">
-    <form method="dialog">
-      <div class="dialog-head">
-        <h2>Adult Settings</h2>
-        <button class="close-btn" value="close" aria-label="Close settings">x</button>
-      </div>
-      <label>
-        Reminder minutes
-        <input id="reminderInput" type="number" min="5" max="120" step="5" value="30">
-      </label>
-      <label>
-        Number level
-        <select id="numberLevelInput">
-          <option value="clever">Clever</option>
-          <option value="genius">Genius</option>
-          <option value="beast">Beast</option>
-        </select>
-      </label>
-      <label>
-        Visual effects
-        <select id="effectLevelInput">
-          <option value="calm">Calm</option>
-          <option value="trail">Trails</option>
-          <option value="flash">Trails + Flash</option>
-        </select>
-      </label>
-      <label>
-        Completion phrase
-        <input id="phraseInput" type="text" maxlength="70" value="Signal noticed. Approach run complete.">
-      </label>
-      <div class="toggle-row">
-        <span>Low stimulation mode</span>
-        <input id="calmModeInput" type="checkbox">
-      </div>
-      <menu>
-        <button id="resetAllBtn" type="button" class="danger">Reset Progress</button>
-        <button value="close" class="primary">Done</button>
-      </menu>
-    </form>
-  </dialog>
-
-  <div class="flash-layer" id="flashLayer" aria-hidden="true"></div>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
 </body>
 </html>
-
-
-
-
-
