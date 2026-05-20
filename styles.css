@@ -254,6 +254,68 @@ h1 { font-size: clamp(1.35rem, 4vw, 2.35rem); line-height: 1.02; }
 .choice.poop { background: linear-gradient(180deg, #ad7548, #754522); }
 .choice.try { background: linear-gradient(180deg, #6aa6ff, #315fa8); }
 .choice.calm { background: linear-gradient(180deg, #6fbd80, #3d8651); }
+.number-panel {
+  margin-top: 14px;
+  background: rgba(255,255,255,0.82);
+  border: 2px solid rgba(21, 52, 59, 0.11);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: 0 12px 26px var(--shadow);
+}
+.number-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.number-stats > div {
+  min-height: 78px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  border: 2px solid rgba(21, 52, 59, 0.1);
+  border-radius: var(--radius);
+  background: #f7fbf8;
+  padding: 10px;
+}
+.number-stats strong {
+  color: var(--teal-dark);
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+.number-challenge {
+  margin-top: 12px;
+  border: 2px solid rgba(45, 125, 143, 0.18);
+  border-radius: var(--radius);
+  background: #eef9f7;
+  padding: 12px;
+}
+.number-challenge p {
+  min-height: 28px;
+  color: var(--ink);
+  font-weight: 900;
+  font-size: clamp(1rem, 2.7vw, 1.2rem);
+}
+.number-choices {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+.number-choices button {
+  min-height: 54px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--teal);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 900;
+  box-shadow: 0 8px 16px var(--shadow);
+}
+.number-choices button:active {
+  transform: translateY(2px);
+}
 .quest-panel {
   margin-top: 14px;
   background: rgba(255,255,255,0.78);
@@ -352,6 +414,8 @@ menu button {
   .character { left: 8%; bottom: 58px; transform: scale(0.9); }
   .potty { right: 6%; bottom: 38px; transform: scale(0.9); transform-origin: bottom right; }
   .sticker-grid { grid-template-columns: repeat(5, 1fr); }
+  .number-stats { grid-template-columns: 1fr; }
+  .number-choices { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 420px) {
   .bathroom-scene { min-height: 360px; }
@@ -362,4 +426,5 @@ menu button {
   .mission-card { grid-template-columns: 58px 1fr; padding: 14px; }
   .mission-icon { width: 52px; height: 52px; font-size: 1.5rem; }
 }
+
 
