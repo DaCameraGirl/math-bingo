@@ -174,6 +174,13 @@ button, .song-panel a {
   border-color: rgba(96,217,120,0.72);
   color: #d8ffe0;
 }
+.cell.target-line {
+  border-color: rgba(255, 200, 74, 0.74);
+  box-shadow: inset 0 0 0 1px rgba(255, 200, 74, 0.28), 0 0 14px rgba(255, 200, 74, 0.14);
+}
+.cell.target-line:not(.marked) {
+  color: #fff4bf;
+}
 .cell.bingo {
   background:
     radial-gradient(circle, rgba(255,200,74,0.5), transparent 58%),
@@ -224,7 +231,6 @@ button, .song-panel a {
   line-height: 1.4;
 }
 .spot-panel,
-.coop-panel,
 .animal-panel {
   margin-top: 12px;
   padding: 14px;
@@ -280,51 +286,6 @@ button, .song-panel a {
 .spot-card button.wrong {
   background: linear-gradient(135deg, #532027, #ff6565);
 }
-.coop-track {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 6px;
-  margin-top: 12px;
-}
-.coop-space {
-  min-height: 48px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  border: 1px solid rgba(88, 215, 255, 0.22);
-  background: #101b23;
-  color: var(--muted);
-  font-weight: 900;
-}
-.coop-space.done {
-  background: rgba(96, 217, 120, 0.22);
-  color: #d8ffe0;
-}
-.coop-space.current {
-  border-color: var(--gold);
-  color: var(--gold);
-  box-shadow: 0 0 18px rgba(255, 200, 74, 0.24);
-}
-.coop-call {
-  display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 10px;
-  align-items: center;
-  margin-top: 10px;
-}
-.coop-call strong {
-  display: grid;
-  place-items: center;
-  min-height: 58px;
-  border-radius: 8px;
-  background: var(--gold);
-  color: #071018;
-  font-size: 2rem;
-}
-.coop-call span {
-  color: var(--muted);
-  font-weight: 800;
-}
 .animal-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -358,19 +319,69 @@ button, .song-panel a {
   margin-top: 12px;
   padding: 14px;
 }
-.song-panel div {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 10px;
+.song-head p {
+  color: var(--muted);
+  margin-top: 4px;
 }
-.song-panel a {
+.song-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.song-card {
+  display: grid;
+  grid-template-rows: 110px auto auto;
+  gap: 8px;
+  min-height: 190px;
+  padding: 10px;
+  text-decoration: none;
+  align-content: start;
+}
+.song-art {
+  position: relative;
   display: grid;
   place-items: center;
-  min-height: 48px;
-  padding: 8px;
-  text-align: center;
-  text-decoration: none;
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,0.32), transparent 24%),
+    linear-gradient(135deg, #2a4654, #101820);
+}
+.song-card.juny .song-art {
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,0.36), transparent 24%),
+    linear-gradient(135deg, #ffc84a, #ff6565, #6c5cff);
+}
+.song-card.cocobi .song-art {
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,0.36), transparent 24%),
+    linear-gradient(135deg, #60d978, #58d7ff, #ffc84a);
+}
+.song-card.habits .song-art {
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,0.36), transparent 24%),
+    linear-gradient(135deg, #58d7ff, #6c5cff, #60d978);
+}
+.play {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: rgba(7, 16, 24, 0.86);
+  color: #fff;
+  font-size: 0.86rem;
+  text-transform: uppercase;
+}
+.song-title {
+  color: var(--text);
+  font-weight: 900;
+  line-height: 1.2;
+}
+.song-card strong {
+  color: var(--muted);
+  font-size: 0.85rem;
 }
 .spark {
   position: fixed;
@@ -416,12 +427,12 @@ button, .song-panel a {
   .target-panel { grid-template-columns: 86px 1fr; }
   .target { width: 78px; }
   .spot-cards { grid-template-columns: 1fr; }
-  .coop-track { grid-template-columns: repeat(5, 1fr); }
   .animal-grid { grid-template-columns: repeat(2, 1fr); }
+  .song-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 420px) {
   .app { padding-inline: 10px; }
   .topbar button { font-size: 0.8rem; }
   .cell { min-height: 50px; }
-  .song-panel div { grid-template-columns: 1fr; }
+  .song-card { grid-template-rows: 96px auto auto; }
 }

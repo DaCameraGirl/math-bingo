@@ -1,7 +1,7 @@
 ﻿{
-  "name": "Bingo Poo Number Board",
-  "short_name": "Bingo Poo",
-  "description": "A number bingo approach game with optional track-card clues.",
+  "name": "Numbers R Us",
+  "short_name": "Numbers R Us",
+  "description": "A number game collection with line-clearing bingo, track cards, matching, and song breaks.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0b1117",
@@ -9,3 +9,4 @@
   "orientation": "portrait-primary",
   "icons": []
 }
+

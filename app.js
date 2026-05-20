@@ -1,4 +1,4 @@
-const STORE = 'bingoPooNumberBoard';
+const STORE = 'numbersRUsBoard';
 const size = 5;
 const bingoLines = [
   [0, 1, 2, 3, 4],
@@ -33,9 +33,8 @@ let marked = new Set();
 let current = null;
 let active = false;
 let spotAnswer = null;
-let coopPosition = 0;
-let coopSpaces = 10;
 let animalFirst = null;
+let targetLine = [];
 
 const $ = (id) => document.getElementById(id);
 const board = $('board');
@@ -83,6 +82,7 @@ function renderStats() {
 function newCard() {
   card = uniqueNumbers(size * size, 1, 99);
   marked = new Set();
+  targetLine = bingoLines[rnd(0, bingoLines.length - 1)];
   active = false;
   current = null;
   board.innerHTML = '';
@@ -92,10 +92,11 @@ function newCard() {
     button.className = 'cell';
     button.textContent = value;
     button.dataset.index = index;
+    if (targetLine.includes(index)) button.classList.add('target-line');
     button.addEventListener('click', () => chooseCell(index));
     board.appendChild(button);
   });
-  setCall('Ready', 'Press Start Run.', 'Solve the clue, tap the answer, and complete a bingo line.');
+  setCall('Ready', 'Press Start Run.', 'Clear the highlighted line. Every clue points to that line.');
   renderStats();
 }
 
@@ -108,26 +109,28 @@ function startRun() {
 
 function nextClue() {
   if (!active) active = true;
-  const remaining = card.filter((_, index) => !marked.has(index));
-  if (!remaining.length) {
+  const openTargets = targetLine.filter((index) => !marked.has(index));
+  if (!openTargets.length) {
     newCard();
     startRun();
     return;
   }
-  const answer = remaining[rnd(0, remaining.length - 1)];
+  const targetIndex = openTargets[rnd(0, openTargets.length - 1)];
+  const answer = card[targetIndex];
   current = makeClue(answer);
   setCall(current.type, current.text, current.hint);
 }
 
 function nextTrackClue() {
   if (!active) active = true;
-  const remaining = card.filter((_, index) => !marked.has(index));
-  if (!remaining.length) {
+  const openTargets = targetLine.filter((index) => !marked.has(index));
+  if (!openTargets.length) {
     newCard();
     startRun();
     return;
   }
-  const answer = remaining[rnd(0, remaining.length - 1)];
+  const targetIndex = openTargets[rnd(0, openTargets.length - 1)];
+  const answer = card[targetIndex];
   current = makeTrackClue(answer);
   setCall(current.type, current.text, current.hint);
 }
@@ -308,38 +311,6 @@ function chooseSpot(item, button) {
   setTimeout(newSpotMatch, 900);
 }
 
-function renderCoopTrack() {
-  const track = $('coopTrack');
-  track.innerHTML = '';
-  for (let i = 0; i < coopSpaces; i += 1) {
-    const space = document.createElement('div');
-    space.className = `coop-space${i < coopPosition ? ' done' : ''}${i === coopPosition ? ' current' : ''}`;
-    space.textContent = i + 1;
-    track.appendChild(space);
-  }
-}
-
-function coopMove() {
-  const count = rnd(1, 4);
-  $('coopCount').textContent = count;
-  $('coopText').textContent = `Count ${count}, then move ${count} space${count > 1 ? 's' : ''}.`;
-  coopPosition = Math.min(coopSpaces, coopPosition + count);
-  if (coopPosition >= coopSpaces) {
-    state.credits += 4;
-    state.streak += 1;
-    coopPosition = 0;
-    $('coopText').textContent = `Route complete. +4 credits. New route ready.`;
-    $('target').classList.add('hit');
-    setTimeout(() => $('target').classList.remove('hit'), 700);
-    fanfare();
-  } else {
-    beep(360 + count * 40);
-  }
-  save();
-  renderStats();
-  renderCoopTrack();
-}
-
 function newAnimalPuzzle() {
   animalFirst = null;
   const picks = shuffle(animalFacts).slice(0, 4);
@@ -466,7 +437,6 @@ $('trackClueBtn').addEventListener('click', nextTrackClue);
 $('nextClueBtn').addEventListener('click', nextClue);
 $('newCardBtn').addEventListener('click', newCard);
 $('newSpotBtn').addEventListener('click', newSpotMatch);
-$('coopRollBtn').addEventListener('click', coopMove);
 $('newAnimalBtn').addEventListener('click', newAnimalPuzzle);
 $('soundBtn').addEventListener('click', () => {
   state.sound = !state.sound;
@@ -476,5 +446,4 @@ $('soundBtn').addEventListener('click', () => {
 
 newCard();
 newSpotMatch();
-renderCoopTrack();
 newAnimalPuzzle();

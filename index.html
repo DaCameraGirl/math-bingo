@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#101820">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Bingo Poo">
+  <meta name="apple-mobile-web-app-title" content="Numbers R Us">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css">
-  <title>Bingo Poo Number Board</title>
+  <title>Numbers R Us</title>
 </head>
 <body>
   <main class="app">
@@ -16,7 +16,7 @@
       <button id="soundBtn" type="button">Sound On</button>
       <div>
         <span>Number Logic Game</span>
-        <h1>Bingo Poo</h1>
+        <h1>Numbers R Us</h1>
       </div>
       <button id="newCardBtn" type="button">New Card</button>
     </header>
@@ -32,7 +32,7 @@
       <div class="call-panel">
         <span id="callType">Ready</span>
         <h2 id="callText">Press Start Run.</h2>
-        <p id="callHint">Solve the clue, tap the answer on the board, and complete a row, column, or diagonal.</p>
+        <p id="callHint">Solve the clue and clear the highlighted line.</p>
         <div class="actions">
           <button id="startBtn" class="primary" type="button">Start Run</button>
           <button id="trackClueBtn" type="button">Track Card</button>
@@ -72,21 +72,6 @@
       </div>
     </section>
 
-    <section class="coop-panel">
-      <div class="spot-head">
-        <div>
-          <h2>Count Home</h2>
-          <p>Cooperative counting route. Count the dots and move the token to the target.</p>
-        </div>
-        <button id="coopRollBtn" type="button">Count Move</button>
-      </div>
-      <div class="coop-track" id="coopTrack" aria-label="cooperative counting track"></div>
-      <div class="coop-call">
-        <strong id="coopCount">0</strong>
-        <span id="coopText">Press Count Move.</span>
-      </div>
-    </section>
-
     <section class="animal-panel">
       <div class="spot-head">
         <div>
@@ -99,10 +84,28 @@
     </section>
 
     <section class="song-panel">
-      <h2>Optional Song Break</h2>
-      <div>
-        <a href="https://www.youtube.com/watch?v=jkbb7aoYqTU" target="_blank" rel="noopener noreferrer">JunyTony Poo Poo Song</a>
-        <a href="https://www.youtube.com/results?search_query=Hello+Cocobi+Potty+Song+Compilation" target="_blank" rel="noopener noreferrer">Hello Cocobi Potty Songs</a>
+      <div class="song-head">
+        <div>
+          <h2>Optional Song Break</h2>
+          <p>Open a song in YouTube when a break helps.</p>
+        </div>
+      </div>
+      <div class="song-grid">
+        <a class="song-card juny" href="https://www.youtube.com/watch?v=jkbb7aoYqTU" target="_blank" rel="noopener noreferrer">
+          <span class="song-art"><span class="play">Play</span></span>
+          <span class="song-title">Poo Poo Song</span>
+          <strong>JunyTony</strong>
+        </a>
+        <a class="song-card cocobi" href="https://www.youtube.com/results?search_query=Hello+Cocobi+Potty+Song+Compilation" target="_blank" rel="noopener noreferrer">
+          <span class="song-art"><span class="play">Play</span></span>
+          <span class="song-title">Potty Song Compilation</span>
+          <strong>Hello Cocobi</strong>
+        </a>
+        <a class="song-card habits" href="https://www.youtube.com/results?search_query=ABCmouse+Healthy+Habits+Self+Care+Learning+Songs" target="_blank" rel="noopener noreferrer">
+          <span class="song-art"><span class="play">Play</span></span>
+          <span class="song-title">Healthy Habits</span>
+          <strong>ABCmouse</strong>
+        </a>
       </div>
     </section>
   </main>
