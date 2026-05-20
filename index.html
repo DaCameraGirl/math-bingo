@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#2d7d8f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Potty Time 2">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <title>Jaxon's Potty Time 2</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle sound">Sound</button>
+      <div class="brand-lockup">
+        <span class="kicker">Body Signal Lab</span>
+        <h1>Jaxon's Potty Time 2</h1>
+      </div>
+      <button class="icon-btn" id="settingsBtn" type="button" aria-label="Open settings">Adult</button>
+    </header>
+
+    <section class="hero-stage" aria-label="Game stage">
+      <div class="status-strip">
+        <div>
+          <span class="label">Today</span>
+          <strong id="todayCount">0</strong>
+        </div>
+        <div>
+          <span class="label">Stickers</span>
+          <strong id="stickerCount">0</strong>
+        </div>
+        <div>
+          <span class="label">Streak</span>
+          <strong id="streakCount">0</strong>
+        </div>
+      </div>
+
+      <div class="bathroom-scene" id="scene">
+        <div class="window-scene" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="body-meter" aria-label="Body signal meter">
+          <div class="meter-title">Body Signal</div>
+          <div class="meter-track"><div id="signalFill"></div></div>
+          <div id="signalText" class="meter-copy">calm body</div>
+        </div>
+        <button class="character" id="character" type="button" aria-label="Check body signal">
+          <span class="face" id="face">:)</span>
+          <span class="shirt">J</span>
+        </button>
+        <div class="potty" id="potty" aria-label="Potty target">
+          <div class="tank"></div>
+          <div class="seat"></div>
+          <div class="bowl"><span id="bowlGlow"></span></div>
+          <div class="base"></div>
+        </div>
+        <div id="floatLayer" class="float-layer" aria-hidden="true"></div>
+      </div>
+
+      <div class="mission-card" id="missionCard">
+        <span class="mission-icon" id="missionIcon">?</span>
+        <div>
+          <h2 id="missionTitle">What does your body say?</h2>
+          <p id="missionText">Pick a body signal. Then help the pop reach the potty.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="Game controls">
+      <button class="choice pee" type="button" data-signal="pee">
+        <span>Drop</span>
+        <strong>Pee Signal</strong>
+      </button>
+      <button class="choice poop" type="button" data-signal="poop">
+        <span>Pop</span>
+        <strong>Poop Signal</strong>
+      </button>
+      <button class="choice try" type="button" data-signal="try">
+        <span>Maybe</span>
+        <strong>Try Sit</strong>
+      </button>
+      <button class="choice calm" type="button" data-signal="calm">
+        <span>OK</span>
+        <strong>All Clear</strong>
+      </button>
+    </section>
+
+    <section class="quest-panel">
+      <div class="quest-header">
+        <h2>Sticker Path</h2>
+        <button id="resetRoundBtn" type="button">New Round</button>
+      </div>
+      <div class="sticker-grid" id="stickerGrid" aria-label="Earned stickers"></div>
+    </section>
+  </main>
+
+  <dialog class="settings" id="settingsDialog">
+    <form method="dialog">
+      <div class="dialog-head">
+        <h2>Adult Settings</h2>
+        <button class="close-btn" value="close" aria-label="Close settings">x</button>
+      </div>
+      <label>
+        Reminder minutes
+        <input id="reminderInput" type="number" min="5" max="120" step="5" value="30">
+      </label>
+      <label>
+        Reward phrase
+        <input id="phraseInput" type="text" maxlength="70" value="Body signal noticed. Potty mission complete.">
+      </label>
+      <div class="toggle-row">
+        <span>Low stimulation mode</span>
+        <input id="calmModeInput" type="checkbox">
+      </div>
+      <menu>
+        <button id="resetAllBtn" type="button" class="danger">Reset Progress</button>
+        <button value="close" class="primary">Done</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
