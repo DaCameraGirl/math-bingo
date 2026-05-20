@@ -34,6 +34,9 @@ let current = null;
 let active = false;
 let spotAnswer = null;
 let animalFirst = null;
+let stepSafeCount = 0;
+let stepNeed = 5;
+let stepRule = null;
 let targetLine = [];
 
 const $ = (id) => document.getElementById(id);
@@ -370,6 +373,63 @@ function chooseAnimalCard(button) {
   animalFirst = null;
 }
 
+function newStepPath() {
+  stepSafeCount = 0;
+  const divisor = rnd(3, 9);
+  stepRule = (value) => value % divisor === 0;
+  $('stepRule').textContent = `Step only on multiples of ${divisor}. Clear ${stepNeed} safe steps.`;
+  const safe = uniqueNumbers(7, 1, 12).map((value) => value * divisor);
+  const traps = [];
+  while (traps.length < 9) {
+    const value = rnd(2, 99);
+    if (value % divisor !== 0 && !traps.includes(value)) traps.push(value);
+  }
+  const cells = shuffle([...safe.slice(0, 7), ...traps]).slice(0, 16);
+  const grid = $('stepGrid');
+  grid.innerHTML = '';
+  cells.forEach((value) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = value;
+    button.dataset.value = value;
+    button.addEventListener('click', () => chooseStep(button));
+    grid.appendChild(button);
+  });
+}
+
+function chooseStep(button) {
+  if (!stepRule || button.disabled) return;
+  const value = Number(button.dataset.value);
+  if (!stepRule(value)) {
+    button.classList.add('trap');
+    state.streak = 0;
+    save();
+    renderStats();
+    beep(140);
+    toast('Trap step. New path.');
+    setTimeout(newStepPath, 650);
+    return;
+  }
+  button.classList.add('safe');
+  button.disabled = true;
+  stepSafeCount += 1;
+  state.credits += 1;
+  state.streak += 1;
+  save();
+  renderStats();
+  beep(460 + stepSafeCount * 30);
+  if (stepSafeCount >= stepNeed) {
+    state.credits += 4;
+    save();
+    renderStats();
+    $('target').classList.add('hit');
+    setTimeout(() => $('target').classList.remove('hit'), 700);
+    fanfare();
+    toast('Safe path complete. +4 bonus credits.');
+    setTimeout(newStepPath, 900);
+  }
+}
+
 function setCall(type, text, hint) {
   $('callType').textContent = type;
   $('callText').textContent = text;
@@ -438,6 +498,7 @@ $('nextClueBtn').addEventListener('click', nextClue);
 $('newCardBtn').addEventListener('click', newCard);
 $('newSpotBtn').addEventListener('click', newSpotMatch);
 $('newAnimalBtn').addEventListener('click', newAnimalPuzzle);
+$('newStepBtn').addEventListener('click', newStepPath);
 $('soundBtn').addEventListener('click', () => {
   state.sound = !state.sound;
   save();
@@ -447,3 +508,4 @@ $('soundBtn').addEventListener('click', () => {
 newCard();
 newSpotMatch();
 newAnimalPuzzle();
+newStepPath();

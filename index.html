@@ -58,56 +58,79 @@
       </div>
     </section>
 
-    <section class="spot-panel">
-      <div class="spot-head">
-        <div>
-          <h2>Spot Match</h2>
-          <p>Find the one shared number or track mark between both cards.</p>
+    <details class="mode-panel">
+      <summary>Spot Match</summary>
+      <section class="spot-panel">
+        <div class="spot-head">
+          <div>
+            <h2>Spot Match</h2>
+            <p>Find the one shared number or track mark between both cards.</p>
+          </div>
+          <button id="newSpotBtn" type="button">New Match</button>
         </div>
-        <button id="newSpotBtn" type="button">New Match</button>
-      </div>
-      <div class="spot-cards">
-        <div id="spotCardA" class="spot-card"></div>
-        <div id="spotCardB" class="spot-card"></div>
-      </div>
-    </section>
+        <div class="spot-cards">
+          <div id="spotCardA" class="spot-card"></div>
+          <div id="spotCardB" class="spot-card"></div>
+        </div>
+      </section>
+    </details>
 
-    <section class="animal-panel">
-      <div class="spot-head">
-        <div>
-          <h2>Animal Puzzle Match</h2>
-          <p>Match each animal card to its number fact card.</p>
+    <details class="mode-panel">
+      <summary>Animal Puzzle Match</summary>
+      <section class="animal-panel">
+        <div class="spot-head">
+          <div>
+            <h2>Animal Puzzle Match</h2>
+            <p>Match each animal card to its number fact card.</p>
+          </div>
+          <button id="newAnimalBtn" type="button">New Puzzle</button>
         </div>
-        <button id="newAnimalBtn" type="button">New Puzzle</button>
-      </div>
-      <div id="animalGrid" class="animal-grid" aria-label="animal matching cards"></div>
-    </section>
+        <div id="animalGrid" class="animal-grid" aria-label="animal matching cards"></div>
+      </section>
+    </details>
 
-    <section class="song-panel">
-      <div class="song-head">
-        <div>
-          <h2>Optional Song Break</h2>
-          <p>Open a song in YouTube when a break helps.</p>
+    <details class="mode-panel">
+      <summary>Step Safe</summary>
+      <section class="step-panel">
+        <div class="spot-head">
+          <div>
+            <h2>Step Safe</h2>
+            <p id="stepRule">Press New Path. Step only on numbers that match the rule.</p>
+          </div>
+          <button id="newStepBtn" type="button">New Path</button>
         </div>
-      </div>
-      <div class="song-grid">
-        <a class="song-card juny" href="https://www.youtube.com/watch?v=jkbb7aoYqTU" target="_blank" rel="noopener noreferrer">
-          <span class="song-art"><span class="play">Play</span></span>
-          <span class="song-title">Poo Poo Song</span>
-          <strong>JunyTony</strong>
-        </a>
-        <a class="song-card cocobi" href="https://www.youtube.com/results?search_query=Hello+Cocobi+Potty+Song+Compilation" target="_blank" rel="noopener noreferrer">
-          <span class="song-art"><span class="play">Play</span></span>
-          <span class="song-title">Potty Song Compilation</span>
-          <strong>Hello Cocobi</strong>
-        </a>
-        <a class="song-card habits" href="https://www.youtube.com/results?search_query=ABCmouse+Healthy+Habits+Self+Care+Learning+Songs" target="_blank" rel="noopener noreferrer">
-          <span class="song-art"><span class="play">Play</span></span>
-          <span class="song-title">Healthy Habits</span>
-          <strong>ABCmouse</strong>
-        </a>
-      </div>
-    </section>
+        <div id="stepGrid" class="step-grid" aria-label="step safe number path"></div>
+      </section>
+    </details>
+
+    <details class="mode-panel">
+      <summary>Song Break</summary>
+      <section class="song-panel">
+        <div class="song-head">
+          <div>
+            <h2>Optional Song Break</h2>
+            <p>Open a song in YouTube when a break helps.</p>
+          </div>
+        </div>
+        <div class="song-grid">
+          <a class="song-card juny" href="https://www.youtube.com/watch?v=jkbb7aoYqTU" target="_blank" rel="noopener noreferrer">
+            <span class="song-art"><span class="play">Play</span></span>
+            <span class="song-title">Poo Poo Song</span>
+            <strong>JunyTony</strong>
+          </a>
+          <a class="song-card cocobi" href="https://www.youtube.com/results?search_query=Hello+Cocobi+Potty+Song+Compilation" target="_blank" rel="noopener noreferrer">
+            <span class="song-art"><span class="play">Play</span></span>
+            <span class="song-title">Potty Song Compilation</span>
+            <strong>Hello Cocobi</strong>
+          </a>
+          <a class="song-card habits" href="https://www.youtube.com/results?search_query=ABCmouse+Healthy+Habits+Self+Care+Learning+Songs" target="_blank" rel="noopener noreferrer">
+            <span class="song-art"><span class="play">Play</span></span>
+            <span class="song-title">Healthy Habits</span>
+            <strong>ABCmouse</strong>
+          </a>
+        </div>
+      </section>
+    </details>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>

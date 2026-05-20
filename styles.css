@@ -315,6 +315,35 @@ button, .song-panel a {
   border-color: var(--red);
   animation: shake 160ms linear 2;
 }
+.step-panel {
+  margin-top: 12px;
+  padding: 14px;
+  background: rgba(17, 28, 36, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 18px 34px var(--shadow);
+}
+.step-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.step-grid button {
+  min-height: 62px;
+  background: linear-gradient(160deg, #172731, #0d171e);
+  border-color: rgba(88, 215, 255, 0.24);
+  color: var(--text);
+  font-size: 1.2rem;
+}
+.step-grid button.safe {
+  background: linear-gradient(160deg, #1b5830, #60d978);
+  color: #061008;
+}
+.step-grid button.trap {
+  background: linear-gradient(160deg, #532027, #ff6565);
+  animation: shake 160ms linear 2;
+}
 .song-panel {
   margin-top: 12px;
   padding: 14px;
@@ -429,6 +458,7 @@ button, .song-panel a {
   .spot-cards { grid-template-columns: 1fr; }
   .animal-grid { grid-template-columns: repeat(2, 1fr); }
   .song-grid { grid-template-columns: 1fr; }
+  .step-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 420px) {
   .app { padding-inline: 10px; }
