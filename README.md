@@ -9,7 +9,8 @@ The app focuses on body-signal awareness instead of shame or alarms:
 - Pick the closest body signal: pee, poop, maybe try, or all clear.
 - Tap the spawned drop/pop token to send it to the potty.
 - Earn stickers for noticing signals and completing potty missions.
-- Use the Number Lab for primes, factors, equations, and bonus sticker puzzles.
+- Use the Number Lab for primes, factors, Fibonacci, triangular numbers, modulo, equations, prime gaps, and bonus sticker puzzles.
+- Turn on Trails or Trails + Flash for moving number effects and pointer-following prime trails.
 - Use the Adult panel for reminder timing, reward phrase, sound, and low stimulation mode.
 
 ## Files
@@ -20,4 +21,5 @@ The app focuses on body-signal awareness instead of shame or alarms:
 - `manifest.json` - PWA metadata
 
 Open `index.html` directly or publish the folder with GitHub Pages.
+
 

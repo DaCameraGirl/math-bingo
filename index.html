@@ -28,7 +28,7 @@
           <strong id="todayCount">0</strong>
         </div>
         <div>
-          <span class="label">Stickers</span>
+          <span class="label">Prime Stickers</span>
           <strong id="stickerCount">0</strong>
         </div>
         <div>
@@ -38,6 +38,7 @@
       </div>
 
       <div class="bathroom-scene" id="scene">
+        <div id="numberRain" class="number-rain" aria-hidden="true"></div>
         <div class="window-scene" aria-hidden="true">
           <span></span><span></span><span></span>
         </div>
@@ -96,8 +97,14 @@
         <div><span class="label">Missions</span><strong id="missionNumber">0</strong></div>
         <div><span class="label">Next Prime</span><strong id="nextPrimeNumber">2</strong></div>
         <div><span class="label">Factor Code</span><strong id="factorCode">1</strong></div>
+        <div><span class="label">Combo</span><strong id="comboCount">0</strong></div>
       </div>
+      <div class="number-strip" id="numberStrip" aria-label="Number sequence trail"></div>
       <div class="number-challenge">
+        <div class="challenge-meta">
+          <span id="challengeType">Pattern</span>
+          <span id="challengeLevel">Level 1</span>
+        </div>
         <p id="numberQuestion">Complete a potty mission to unlock a number puzzle.</p>
         <div class="number-choices" id="numberChoices"></div>
       </div>
@@ -105,7 +112,7 @@
 
     <section class="quest-panel">
       <div class="quest-header">
-        <h2>Sticker Path</h2>
+        <h2>Prime Sticker Path</h2>
         <button id="resetRoundBtn" type="button">New Round</button>
       </div>
       <div class="sticker-grid" id="stickerGrid" aria-label="Earned stickers"></div>
@@ -123,6 +130,22 @@
         <input id="reminderInput" type="number" min="5" max="120" step="5" value="30">
       </label>
       <label>
+        Number level
+        <select id="numberLevelInput">
+          <option value="clever">Clever</option>
+          <option value="genius">Genius</option>
+          <option value="beast">Beast</option>
+        </select>
+      </label>
+      <label>
+        Visual effects
+        <select id="effectLevelInput">
+          <option value="calm">Calm</option>
+          <option value="trail">Trails</option>
+          <option value="flash">Trails + Flash</option>
+        </select>
+      </label>
+      <label>
         Reward phrase
         <input id="phraseInput" type="text" maxlength="70" value="Body signal noticed. Potty mission complete.">
       </label>
@@ -137,6 +160,7 @@
     </form>
   </dialog>
 
+  <div class="flash-layer" id="flashLayer" aria-hidden="true"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
 </body>
