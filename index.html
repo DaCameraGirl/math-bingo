@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#2d7d8f">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Potty Time 2">
+  <meta name="apple-mobile-web-app-title" content="Number Signal Lab">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css">
-  <title>Jaxon's Potty Time 2</title>
+  <title>Jaxon's Number Signal Lab</title>
 </head>
 <body>
   <main class="app-shell">
@@ -16,7 +16,7 @@
       <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle sound">Sound</button>
       <div class="brand-lockup">
         <span class="kicker">Body Signal Lab</span>
-        <h1>Jaxon's Potty Time 2</h1>
+        <h1>Jaxon's Number Signal Lab</h1>
       </div>
       <button class="icon-btn" id="settingsBtn" type="button" aria-label="Open settings">Adult</button>
     </header>
@@ -28,7 +28,7 @@
           <strong id="todayCount">0</strong>
         </div>
         <div>
-          <span class="label">Prime Stickers</span>
+          <span class="label">Prime Credits</span>
           <strong id="stickerCount">0</strong>
         </div>
         <div>
@@ -45,6 +45,16 @@
         <div class="window-scene" aria-hidden="true">
           <span></span><span></span><span></span>
         </div>
+                <div class="game-hud" aria-label="Game status">
+          <div><span>Mode</span><strong id="gameMode">Ready</strong></div>
+          <div><span>Time</span><strong id="gameTime">30</strong></div>
+          <div><span>Score</span><strong id="gameScore">0</strong></div>
+          <div><span>Goal</span><strong id="gameGoal">8</strong></div>
+        </div>
+        <div id="gameBanner" class="game-banner">
+          <strong>Number Approach Run</strong>
+          <span>Choose a signal run. Tap correct numbers into the toilet target.</span>
+        </div>
         <div class="body-meter" aria-label="Body signal meter">
           <div class="meter-title">Body Signal</div>
           <div class="meter-track"><div id="signalFill"></div></div>
@@ -54,7 +64,7 @@
           <span class="face" id="face">:)</span>
           <span class="shirt">J</span>
         </button>
-        <div class="potty" id="potty" aria-label="Potty target">
+        <div class="potty" id="potty" aria-label="Toilet target">
           <div class="tank"></div>
           <div class="seat"></div>
           <div class="bowl"><span id="bowlGlow"></span></div>
@@ -66,8 +76,8 @@
       <div class="mission-card" id="missionCard">
         <span class="mission-icon" id="missionIcon">?</span>
         <div>
-          <h2 id="missionTitle">What does your body say?</h2>
-                    <p id="missionText">Pick a body signal. Then help the pop reach the potty.</p>
+          <h2 id="missionTitle">Choose a signal run</h2>
+                    <p id="missionText">Use number rules to move body signals toward the toilet target.</p>
           <div class="hero-math">
             <span id="heroChallengeType">Prime Code</span>
             <strong id="heroChallengeLine">Loading number puzzle...</strong>
@@ -78,30 +88,30 @@
 
     <section class="controls" aria-label="Game controls">
       <button class="choice pee" type="button" data-signal="pee">
-        <span>Drop</span>
-        <strong>Pee Signal</strong>
+        <span>Prime</span>
+        <strong>Bladder Signal</strong>
       </button>
       <button class="choice poop" type="button" data-signal="poop">
-        <span>Pop</span>
-        <strong>Poop Signal</strong>
+        <span>Factor</span>
+        <strong>Bowel Signal</strong>
       </button>
       <button class="choice try" type="button" data-signal="try">
-        <span>Maybe</span>
-        <strong>Try Sit</strong>
+        <span>Fibo</span>
+        <strong>Approach Run</strong>
       </button>
       <button class="choice calm" type="button" data-signal="calm">
-        <span>OK</span>
-        <strong>All Clear</strong>
+        <span>Rush</span>
+        <strong>Number Rush</strong>
       </button>
     </section>
 
     <section class="number-panel" aria-label="Number lab">
       <div class="quest-header">
         <h2>Number Lab</h2>
-        <button id="newNumberBtn" type="button">New Puzzle</button>
+        <button id="newNumberBtn" type="button">Start Rush</button>
       </div>
       <div class="number-stats">
-        <div><span class="label">Missions</span><strong id="missionNumber">0</strong></div>
+        <div><span class="label">Runs</span><strong id="missionNumber">0</strong></div>
         <div><span class="label">Next Prime</span><strong id="nextPrimeNumber">2</strong></div>
         <div><span class="label">Factor Code</span><strong id="factorCode">1</strong></div>
         <div><span class="label">Combo</span><strong id="comboCount">0</strong></div>
@@ -112,17 +122,17 @@
           <span id="challengeType">Pattern</span>
           <span id="challengeLevel">Level 1</span>
         </div>
-        <p id="numberQuestion">Complete a potty mission to unlock a number puzzle.</p>
+        <p id="numberQuestion">Clear a signal run to unlock another number puzzle.</p>
         <div class="number-choices" id="numberChoices"></div>
       </div>
     </section>
 
     <section class="quest-panel">
       <div class="quest-header">
-        <h2>Prime Sticker Path</h2>
-        <button id="resetRoundBtn" type="button">New Round</button>
+        <h2>Prime Credit Path</h2>
+        <button id="resetRoundBtn" type="button">New Run</button>
       </div>
-      <div class="sticker-grid" id="stickerGrid" aria-label="Earned stickers"></div>
+      <div class="sticker-grid" id="stickerGrid" aria-label="Earned prime credits"></div>
     </section>
   </main>
 
@@ -153,8 +163,8 @@
         </select>
       </label>
       <label>
-        Reward phrase
-        <input id="phraseInput" type="text" maxlength="70" value="Body signal noticed. Potty mission complete.">
+        Completion phrase
+        <input id="phraseInput" type="text" maxlength="70" value="Signal noticed. Approach run complete.">
       </label>
       <div class="toggle-row">
         <span>Low stimulation mode</span>
@@ -172,4 +182,8 @@
   <script src="app.js"></script>
 </body>
 </html>
+
+
+
+
 

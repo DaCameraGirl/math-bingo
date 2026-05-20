@@ -160,6 +160,117 @@ h1 { font-size: clamp(1.35rem, 4vw, 2.35rem); line-height: 1.02; }
 .window-scene span:nth-child(2) { top: 46px; left: 72px; animation-duration: 12s; }
 .window-scene span:nth-child(3) { top: 66px; left: 32px; animation-duration: 14s; }
 @keyframes drift { 50% { transform: translateX(14px); } }
+.game-hud {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+  z-index: 8;
+  pointer-events: none;
+}
+.game-hud div {
+  min-height: 54px;
+  border-radius: var(--radius);
+  background: rgba(21, 52, 59, 0.88);
+  color: #fff;
+  padding: 8px;
+  box-shadow: 0 0 18px rgba(21,52,59,0.25);
+}
+.game-hud span {
+  display: block;
+  color: #8fe6ff;
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.game-hud strong {
+  display: block;
+  margin-top: 3px;
+  font-size: clamp(0.94rem, 2.5vw, 1.35rem);
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.game-banner {
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  width: min(430px, calc(100% - 28px));
+  transform: translate(-50%, -18px) scale(0.98);
+  border-radius: var(--radius);
+  background: rgba(21, 52, 59, 0.92);
+  color: #fff;
+  padding: 13px 14px;
+  text-align: center;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 18px 40px rgba(21,52,59,0.28), 0 0 28px rgba(45,125,143,0.38);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.game-banner.show {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+.game-banner strong,
+.game-banner span {
+  display: block;
+}
+.game-banner strong {
+  font-size: clamp(1rem, 3vw, 1.35rem);
+}
+.game-banner span {
+  margin-top: 5px;
+  color: #cbeff5;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+.game-tile {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 58px;
+  height: 58px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, #ffffff, #8fe6ff 38%, #2d7d8f 76%);
+  color: #102d34;
+  font-size: 1.25rem;
+  font-weight: 900;
+  box-shadow: 0 12px 22px rgba(21,52,59,0.28), 0 0 24px rgba(143,230,255,0.7);
+  pointer-events: auto;
+  z-index: 9;
+  will-change: transform;
+}
+.game-tile::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border: 2px solid rgba(255,255,255,0.45);
+  border-radius: inherit;
+  animation: tileRing 900ms ease-in-out infinite alternate;
+}
+.game-tile.correct {
+  background: radial-gradient(circle at 30% 20%, #ffffff, #9cffb0 40%, #2d7d3d 78%);
+}
+.game-tile.wrong {
+  background: radial-gradient(circle at 30% 20%, #ffffff, #ffaaa3 40%, #b5372d 78%);
+  animation: tileWrong 180ms linear 2;
+}
+.game-tile.fly-potty {
+  animation: tileFly 620ms cubic-bezier(.2,.9,.2,1) forwards;
+}
+.game-tile.fade-out {
+  animation: tileFade 500ms ease-out forwards;
+}
+@keyframes tileRing { to { transform: scale(1.16); opacity: 0.45; } }
+@keyframes tileWrong { 50% { translate: 7px 0; } }
+@keyframes tileFly { to { transform: translate(var(--dx), var(--dy)) scale(0.18) rotate(22deg) !important; opacity: 0; } }
+@keyframes tileFade { to { opacity: 0; scale: 0.4; } }
 .body-meter {
   position: absolute;
   right: 18px; top: 18px;
@@ -554,7 +665,118 @@ menu button {
   .bathroom-scene { min-height: 400px; }
   .mission-card { min-height: 0; }
   .controls { grid-template-columns: repeat(2, 1fr); }
-  .body-meter { width: 48%; right: 10px; top: 10px; }
+  .game-hud {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+  z-index: 8;
+  pointer-events: none;
+}
+.game-hud div {
+  min-height: 54px;
+  border-radius: var(--radius);
+  background: rgba(21, 52, 59, 0.88);
+  color: #fff;
+  padding: 8px;
+  box-shadow: 0 0 18px rgba(21,52,59,0.25);
+}
+.game-hud span {
+  display: block;
+  color: #8fe6ff;
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.game-hud strong {
+  display: block;
+  margin-top: 3px;
+  font-size: clamp(0.94rem, 2.5vw, 1.35rem);
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.game-banner {
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  width: min(430px, calc(100% - 28px));
+  transform: translate(-50%, -18px) scale(0.98);
+  border-radius: var(--radius);
+  background: rgba(21, 52, 59, 0.92);
+  color: #fff;
+  padding: 13px 14px;
+  text-align: center;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 18px 40px rgba(21,52,59,0.28), 0 0 28px rgba(45,125,143,0.38);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.game-banner.show {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+.game-banner strong,
+.game-banner span {
+  display: block;
+}
+.game-banner strong {
+  font-size: clamp(1rem, 3vw, 1.35rem);
+}
+.game-banner span {
+  margin-top: 5px;
+  color: #cbeff5;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+.game-tile {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 58px;
+  height: 58px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, #ffffff, #8fe6ff 38%, #2d7d8f 76%);
+  color: #102d34;
+  font-size: 1.25rem;
+  font-weight: 900;
+  box-shadow: 0 12px 22px rgba(21,52,59,0.28), 0 0 24px rgba(143,230,255,0.7);
+  pointer-events: auto;
+  z-index: 9;
+  will-change: transform;
+}
+.game-tile::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border: 2px solid rgba(255,255,255,0.45);
+  border-radius: inherit;
+  animation: tileRing 900ms ease-in-out infinite alternate;
+}
+.game-tile.correct {
+  background: radial-gradient(circle at 30% 20%, #ffffff, #9cffb0 40%, #2d7d3d 78%);
+}
+.game-tile.wrong {
+  background: radial-gradient(circle at 30% 20%, #ffffff, #ffaaa3 40%, #b5372d 78%);
+  animation: tileWrong 180ms linear 2;
+}
+.game-tile.fly-potty {
+  animation: tileFly 620ms cubic-bezier(.2,.9,.2,1) forwards;
+}
+.game-tile.fade-out {
+  animation: tileFade 500ms ease-out forwards;
+}
+@keyframes tileRing { to { transform: scale(1.16); opacity: 0.45; } }
+@keyframes tileWrong { 50% { translate: 7px 0; } }
+@keyframes tileFly { to { transform: translate(var(--dx), var(--dy)) scale(0.18) rotate(22deg) !important; opacity: 0; } }
+@keyframes tileFade { to { opacity: 0; scale: 0.4; } }
+.body-meter { width: 48%; right: 10px; top: 10px; }
   .character { left: 8%; bottom: 58px; transform: scale(0.9); }
   .potty { right: 6%; bottom: 38px; transform: scale(0.9); transform-origin: bottom right; }
   .sticker-grid { grid-template-columns: repeat(6, 1fr); }
@@ -574,7 +796,118 @@ menu button {
   .number-orbit span:nth-child(6) { transform: rotate(225deg) translateX(116px) rotate(-225deg); }
   .number-orbit span:nth-child(7) { transform: rotate(270deg) translateX(116px) rotate(-270deg); }
   .number-orbit span:nth-child(8) { transform: rotate(315deg) translateX(116px) rotate(-315deg); }
-  .body-meter { position: absolute; left: 10px; right: 10px; top: 116px; width: auto; }
+  .game-hud {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+  z-index: 8;
+  pointer-events: none;
+}
+.game-hud div {
+  min-height: 54px;
+  border-radius: var(--radius);
+  background: rgba(21, 52, 59, 0.88);
+  color: #fff;
+  padding: 8px;
+  box-shadow: 0 0 18px rgba(21,52,59,0.25);
+}
+.game-hud span {
+  display: block;
+  color: #8fe6ff;
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.game-hud strong {
+  display: block;
+  margin-top: 3px;
+  font-size: clamp(0.94rem, 2.5vw, 1.35rem);
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.game-banner {
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  width: min(430px, calc(100% - 28px));
+  transform: translate(-50%, -18px) scale(0.98);
+  border-radius: var(--radius);
+  background: rgba(21, 52, 59, 0.92);
+  color: #fff;
+  padding: 13px 14px;
+  text-align: center;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 18px 40px rgba(21,52,59,0.28), 0 0 28px rgba(45,125,143,0.38);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.game-banner.show {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+.game-banner strong,
+.game-banner span {
+  display: block;
+}
+.game-banner strong {
+  font-size: clamp(1rem, 3vw, 1.35rem);
+}
+.game-banner span {
+  margin-top: 5px;
+  color: #cbeff5;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+.game-tile {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 58px;
+  height: 58px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, #ffffff, #8fe6ff 38%, #2d7d8f 76%);
+  color: #102d34;
+  font-size: 1.25rem;
+  font-weight: 900;
+  box-shadow: 0 12px 22px rgba(21,52,59,0.28), 0 0 24px rgba(143,230,255,0.7);
+  pointer-events: auto;
+  z-index: 9;
+  will-change: transform;
+}
+.game-tile::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border: 2px solid rgba(255,255,255,0.45);
+  border-radius: inherit;
+  animation: tileRing 900ms ease-in-out infinite alternate;
+}
+.game-tile.correct {
+  background: radial-gradient(circle at 30% 20%, #ffffff, #9cffb0 40%, #2d7d3d 78%);
+}
+.game-tile.wrong {
+  background: radial-gradient(circle at 30% 20%, #ffffff, #ffaaa3 40%, #b5372d 78%);
+  animation: tileWrong 180ms linear 2;
+}
+.game-tile.fly-potty {
+  animation: tileFly 620ms cubic-bezier(.2,.9,.2,1) forwards;
+}
+.game-tile.fade-out {
+  animation: tileFade 500ms ease-out forwards;
+}
+@keyframes tileRing { to { transform: scale(1.16); opacity: 0.45; } }
+@keyframes tileWrong { 50% { translate: 7px 0; } }
+@keyframes tileFly { to { transform: translate(var(--dx), var(--dy)) scale(0.18) rotate(22deg) !important; opacity: 0; } }
+@keyframes tileFade { to { opacity: 0; scale: 0.4; } }
+.body-meter { position: absolute; left: 10px; right: 10px; top: 116px; width: auto; }
   .character { left: 4%; bottom: 42px; transform: scale(0.76); }
   .potty { right: 0; bottom: 28px; transform: scale(0.76); }
   .mission-card { grid-template-columns: 58px 1fr; padding: 14px; }
@@ -582,5 +915,6 @@ menu button {
   .status-strip { grid-template-columns: 1fr 1fr 1fr; }
   .status-strip strong { font-size: 1.18rem; }
 }
+
 
 

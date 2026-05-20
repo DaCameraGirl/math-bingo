@@ -1,7 +1,7 @@
 ﻿{
-  "name": "Jaxon's Potty Time 2",
-  "short_name": "Potty Time 2",
-  "description": "A calm interactive potty signal game for Jaxon.",
+  "name": "Jaxon's Number Signal Lab",
+  "short_name": "Signal Lab",
+  "description": "A number arcade for toilet approach practice.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#d8f3ee",
@@ -9,3 +9,4 @@
   "orientation": "portrait-primary",
   "icons": []
 }
+

@@ -1,5 +1,7 @@
 ﻿const STORAGE_KEY = 'jaxonsPottyTime2';
 const PRIME_STICKERS = ['2', '3', '5', '7', '11', '13', '17', '19', '23', '29', '31', '37'];
+const PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
+const FIBS = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
 const defaultState = {
   stickers: 0,
   today: 0,
@@ -10,7 +12,7 @@ const defaultState = {
   lastDay: '',
   sound: true,
   reminder: 30,
-  phrase: 'Body signal noticed. Potty mission complete.',
+  phrase: 'Signal noticed. Approach run complete.',
   calmMode: false,
   effectLevel: 'flash',
   numberLevel: 'beast',
@@ -21,6 +23,20 @@ let state = loadState();
 let reminderTimer = null;
 let currentChallenge = null;
 let pointerTrailReady = 0;
+let lastFrame = 0;
+const game = {
+  active: false,
+  mode: 'Ready',
+  score: 0,
+  goal: 8,
+  time: 30,
+  combo: 0,
+  rule: null,
+  tiles: new Map(),
+  raf: null,
+  spawnTimer: null,
+  tickTimer: null
+};
 
 const $ = (id) => document.getElementById(id);
 const els = {
@@ -47,8 +63,15 @@ const els = {
   numberStrip: $('numberStrip'),
   challengeType: $('challengeType'),
   challengeLevel: $('challengeLevel'),
+  heroChallengeType: $('heroChallengeType'),
+  heroChallengeLine: $('heroChallengeLine'),
   numberQuestion: $('numberQuestion'),
-  numberChoices: $('numberChoices')
+  numberChoices: $('numberChoices'),
+  gameMode: $('gameMode'),
+  gameTime: $('gameTime'),
+  gameScore: $('gameScore'),
+  gameGoal: $('gameGoal'),
+  gameBanner: $('gameBanner')
 };
 
 function loadState() {
@@ -90,7 +113,6 @@ function render() {
   els.fill.style.width = `${Math.max(8, Math.min(100, state.signal))}%`;
   els.signalText.textContent = signalLabel(state.signal);
   document.body.classList.toggle('low-stim', state.calmMode);
-  document.body.classList.toggle('effects-flash', effectsOn('flash'));
   $('soundBtn').textContent = state.sound ? 'Sound' : 'Quiet';
   $('reminderInput').value = state.reminder;
   $('phraseInput').value = state.phrase;
@@ -99,6 +121,7 @@ function render() {
   $('numberLevelInput').value = state.numberLevel;
   renderNumberFacts();
   renderStickers();
+  updateGameHud();
 }
 
 function renderStickers() {
@@ -135,85 +158,269 @@ function renderNumberStrip(seed) {
 function signalLabel(value) {
   if (value < 30) return 'calm body';
   if (value < 58) return 'small signal';
-  if (value < 82) return 'potty soon';
+  if (value < 82) return 'signal soon';
   return 'go now signal';
 }
 
 function chooseSignal(type) {
-  const data = {
-    pee: { icon: 'DROP', title: 'Pee signal spotted', text: 'Tap the drop and send it to the potty. Then go try for real.', token: 'drop', gain: 1, signal: 72, face: ':o' },
-    poop: { icon: 'POP', title: 'Poop signal spotted', text: 'Tap the pop and land it in the potty. Slow body, steady feet.', token: 'pop', gain: 2, signal: 86, face: ':O' },
-    try: { icon: 'TRY', title: 'Maybe means try', text: 'A short sit counts. You noticed the signal early.', token: 'try', gain: 1, signal: 55, face: ':|' },
-    calm: { icon: 'OK', title: 'All clear check-in', text: 'Nice body scan. We will check again later.', token: 'ok', gain: 0, signal: 18, face: ':)' }
-  }[type];
+  startGame(type);
+}
 
-  els.icon.textContent = data.icon;
-  els.title.textContent = data.title;
-  els.text.textContent = data.text;
-  els.face.textContent = data.face;
-  state.signal = data.signal;
+function modeConfig(type) {
+  const level = levelRank();
+  const factorTarget = [18, 24, 30, 36, 42, 48, 60][(state.missions + state.stickers) % 7];
+  const multipleTarget = 3 + ((state.mathWins + level) % 7);
+  const modes = {
+    pee: {
+      name: 'Bladder Prime Run',
+      icon: 'PRIME',
+      face: ':o',
+      signal: 72,
+      goal: 8 + level,
+      duration: 30,
+      countsPotty: true,
+      reward: 1,
+      prompt: 'Tap prime numbers. Correct primes move the bladder signal to the toilet target.',
+      accepts: (n) => isPrime(n),
+      correct: () => pick(PRIMES),
+      wrong: () => randomComposite(4, 99)
+    },
+    poop: {
+      name: 'Bowel Factor Run',
+      icon: 'FACT',
+      face: ':O',
+      signal: 86,
+      goal: 9 + level,
+      duration: 35,
+      countsPotty: true,
+      reward: 2,
+      prompt: `Tap factors of ${factorTarget}. Correct factors move to the toilet target.`,
+      accepts: (n) => factorTarget % n === 0,
+      correct: () => pick(factors(factorTarget)),
+      wrong: () => randomNonFactor(factorTarget)
+    },
+    try: {
+      name: 'Approach Fibonacci Run',
+      icon: 'FIBO',
+      face: ':|',
+      signal: 55,
+      goal: 7 + level,
+      duration: 30,
+      countsPotty: true,
+      reward: 1,
+      prompt: 'Tap Fibonacci numbers. This is a try-sit run.',
+      accepts: (n) => FIBS.includes(n),
+      correct: () => pick(FIBS),
+      wrong: () => randomNonMember(FIBS, 2, 99)
+    },
+    calm: {
+      name: 'Number Rush',
+      icon: 'RUSH',
+      face: ':D',
+      signal: 40,
+      goal: 12 + level,
+      duration: 40,
+      countsPotty: false,
+      reward: 1,
+      prompt: `Tap multiples of ${multipleTarget}. Build the biggest combo.`,
+      accepts: (n) => n % multipleTarget === 0,
+      correct: () => multipleTarget * rnd(1, 14),
+      wrong: () => randomNonMultiple(multipleTarget)
+    }
+  };
+  return modes[type] || modes.calm;
+}
+
+function startGame(type) {
+  stopGame(false);
+  const config = modeConfig(type);
+  game.active = true;
+  game.mode = config.name;
+  game.score = 0;
+  game.combo = 0;
+  game.goal = config.goal;
+  game.time = config.duration;
+  game.rule = config;
+  state.signal = config.signal;
   saveState();
   render();
-  ping(type === 'poop' ? 180 : 260);
-  spawnNumberTrail(type === 'poop' ? factors(Math.max(2, state.missions + 2)) : smartSequence(state.stickers + 2), type);
 
-  if (type === 'calm') {
-    showToast('Body check complete. No pressure.');
-    scheduleReminder();
-    return;
+  els.icon.textContent = config.icon;
+  els.title.textContent = config.name;
+  els.text.textContent = config.prompt;
+  els.face.textContent = config.face;
+  setBanner(config.name, config.prompt);
+  spawnNumberTrail(smartSequence(state.stickers + state.missions + config.goal), 'math');
+  flash('teal');
+  ping(300);
+
+  for (let i = 0; i < 5; i += 1) setTimeout(spawnTile, i * 180);
+  game.spawnTimer = setInterval(spawnTile, Math.max(420, 900 - levelRank() * 120));
+  game.tickTimer = setInterval(() => {
+    game.time -= 1;
+    updateGameHud();
+    if (game.time <= 0) endRound(false);
+  }, 1000);
+  lastFrame = performance.now();
+  game.raf = requestAnimationFrame(gameLoop);
+}
+
+function stopGame(clearTiles = true) {
+  game.active = false;
+  clearInterval(game.spawnTimer);
+  clearInterval(game.tickTimer);
+  cancelAnimationFrame(game.raf);
+  game.spawnTimer = null;
+  game.tickTimer = null;
+  game.raf = null;
+  if (clearTiles) {
+    game.tiles.forEach((tile) => tile.el.remove());
+    game.tiles.clear();
   }
-  spawnToken(type, data.token, data.gain);
+  updateGameHud();
 }
 
-function spawnToken(type, label, gain) {
-  els.floatLayer.innerHTML = '';
-  const token = document.createElement('button');
-  token.type = 'button';
-  token.className = `token ${type}`;
-  token.textContent = label;
-  token.style.left = type === 'poop' ? '30%' : '24%';
-  token.style.top = type === 'try' ? '50%' : '42%';
-  token.addEventListener('click', () => completeMission(token, gain, type));
-  els.floatLayer.appendChild(token);
-  showToast('Tap the token to send it to the potty.');
+function spawnTile() {
+  if (!game.active || !game.rule) return;
+  const scene = $('scene').getBoundingClientRect();
+  const value = Math.random() < 0.48 ? game.rule.correct() : game.rule.wrong();
+  const el = document.createElement('button');
+  el.type = 'button';
+  el.className = 'game-tile';
+  el.textContent = value;
+  const tile = {
+    el,
+    value,
+    x: rnd(12, Math.max(13, scene.width - 72)),
+    y: -60,
+    speed: rnd(34, 58 + levelRank() * 12) / 60,
+    drift: rnd(-22, 22) / 60,
+    wobble: Math.random() * 6.28
+  };
+  el.style.left = '0px';
+  el.style.top = '0px';
+  el.style.transform = `translate(${tile.x}px, ${tile.y}px)`;
+  el.addEventListener('click', () => hitTile(tile));
+  els.floatLayer.appendChild(el);
+  game.tiles.set(el, tile);
 }
 
-function completeMission(token, gain, type) {
-  const tokenRect = token.getBoundingClientRect();
+function gameLoop(now) {
+  if (!game.active) return;
+  const dt = Math.min(34, now - lastFrame);
+  lastFrame = now;
+  const scene = $('scene').getBoundingClientRect();
+  game.tiles.forEach((tile, key) => {
+    tile.y += tile.speed * dt;
+    tile.x += Math.sin(now / 260 + tile.wobble) * tile.drift * dt;
+    tile.el.style.transform = `translate(${tile.x}px, ${tile.y}px)`;
+    if (tile.y > scene.height + 80) {
+      tile.el.remove();
+      game.tiles.delete(key);
+    }
+  });
+  game.raf = requestAnimationFrame(gameLoop);
+}
+
+function hitTile(tile) {
+  if (!game.active || !game.rule || !game.tiles.has(tile.el)) return;
+  const correct = game.rule.accepts(tile.value);
+  if (correct) {
+    game.score += 1;
+    game.combo += 1;
+    state.combo = Math.max(state.combo || 0, game.combo);
+    tile.el.classList.add('correct');
+    launchTileToPotty(tile);
+    spawnNumberTrail([tile.value, nextPrimeAfter(tile.value), ...factors(Math.max(2, tile.value))], 'math');
+    ping(420 + Math.min(8, game.combo) * 30);
+    updateGameHud();
+    if (game.score >= game.goal) endRound(true);
+  } else {
+    game.combo = 0;
+    state.combo = 0;
+    tile.el.classList.add('wrong');
+    flash('gold');
+    ping(150);
+    setTimeout(() => removeTile(tile), 260);
+    updateGameHud();
+  }
+  saveState();
+  renderNumberFacts();
+}
+
+function launchTileToPotty(tile) {
+  const tokenRect = tile.el.getBoundingClientRect();
   const pottyRect = $('potty').getBoundingClientRect();
   const dx = pottyRect.left + pottyRect.width * 0.55 - (tokenRect.left + tokenRect.width / 2);
   const dy = pottyRect.top + pottyRect.height * 0.55 - (tokenRect.top + tokenRect.height / 2);
-  token.style.setProperty('--dx', `${dx}px`);
-  token.style.setProperty('--dy', `${dy}px`);
-  token.classList.add('fly');
-  token.disabled = true;
-  setTimeout(() => token.remove(), 780);
+  tile.el.style.setProperty('--dx', `${tile.x + dx}px`);
+  tile.el.style.setProperty('--dy', `${tile.y + dy}px`);
+  tile.el.classList.add('fly-potty');
   els.bowlGlow.classList.add('hit');
-  setTimeout(() => els.bowlGlow.classList.remove('hit'), 520);
-
-  state.today += 1;
-  state.missions = Number(state.missions || 0) + 1;
-  state.stickers += gain;
-  state.signal = 12;
-  if (state.today === 1) state.streak = Math.max(1, state.streak);
-  saveState();
-  render();
-  celebrate(type, gain);
-  makeNumberChallenge(type);
-  scheduleReminder();
+  setTimeout(() => els.bowlGlow.classList.remove('hit'), 360);
+  setTimeout(() => removeTile(tile), 620);
 }
 
-function celebrate(type, gain) {
-  const nextPrime = nextPrimeAfter(Math.max(1, state.stickers));
-  const message = gain > 0 ? `${state.phrase} +${gain}. Next prime: ${nextPrime}.` : 'Check-in complete.';
-  els.title.textContent = type === 'poop' ? 'Potty pop landed' : 'Potty mission complete';
-  els.text.textContent = message;
-  els.icon.textContent = 'WIN';
-  els.face.textContent = ':D';
-  showToast(message);
-  burstDigits(type === 'poop' ? factors(state.missions + state.stickers) : smartSequence(state.stickers + 3));
-  flash('gold');
-  fanfare();
+function removeTile(tile) {
+  tile.el.remove();
+  game.tiles.delete(tile.el);
+}
+
+function endRound(won) {
+  if (!game.active) return;
+  const config = game.rule;
+  const score = game.score;
+  const combo = game.combo;
+  stopGame(false);
+  game.tiles.forEach((tile) => tile.el.classList.add('fade-out'));
+  setTimeout(() => {
+    game.tiles.forEach((tile) => tile.el.remove());
+    game.tiles.clear();
+  }, 520);
+
+  if (won) {
+    const bonus = config.reward + Math.floor(Math.max(combo, 0) / 4);
+    if (config.countsPotty) {
+      state.today += 1;
+      state.missions = Number(state.missions || 0) + 1;
+    }
+    state.mathWins += score;
+    state.stickers += bonus;
+    state.signal = 12;
+    if (state.today === 1) state.streak = Math.max(1, state.streak);
+    saveState();
+    render();
+    makeNumberChallenge(config.name);
+    els.icon.textContent = 'WIN';
+    els.title.textContent = `${config.name} cleared`;
+    els.text.textContent = `${score}/${game.goal} landed. Combo ${combo}. +${bonus} prime credit${bonus > 1 ? 's' : ''}.`;
+    setBanner('Run cleared', `Score ${score}. Combo ${combo}. Prime credits unlocked.`);
+    burstDigits(smartSequence(state.stickers + score + combo));
+    flash('teal');
+    fanfare();
+  } else {
+    state.combo = 0;
+    saveState();
+    render();
+    els.title.textContent = 'Run complete';
+    els.text.textContent = `Score ${score}/${game.goal}. Start another run and beat the code.`;
+    setBanner('Try again', `Score ${score}/${game.goal}. The next code is ready.`);
+    makeNumberChallenge('practice');
+  }
+}
+
+function updateGameHud() {
+  els.gameMode.textContent = game.mode || 'Ready';
+  els.gameTime.textContent = Math.max(0, game.time || 30);
+  els.gameScore.textContent = game.score || 0;
+  els.gameGoal.textContent = game.goal || 8;
+}
+
+function setBanner(title, detail) {
+  els.gameBanner.innerHTML = `<strong>${title}</strong><span>${detail}</span>`;
+  els.gameBanner.classList.add('show');
+  clearTimeout(setBanner.timer);
+  setBanner.timer = setTimeout(() => els.gameBanner.classList.remove('show'), 1900);
 }
 
 function makeNumberChallenge(type = 'practice') {
@@ -228,14 +435,12 @@ function makeNumberChallenge(type = 'practice') {
     challenge('Fibonacci', `F(${Math.min(12, 5 + (n % 8))}) = ?`, fib(Math.min(12, 5 + (n % 8))), [fib(Math.min(12, 5 + (n % 8))) + 1, fib(Math.min(12, 5 + (n % 8))) - 1, fib(Math.min(12, 5 + (n % 8))) + 3]),
     challenge('Square Code', `${level + 3}^2 + ${missions} = ?`, (level + 3) ** 2 + missions, [(level + 3) ** 2, (level + 4) ** 2 + missions, (level + 3) ** 2 + missions + 2])
   ];
-
   if (level >= 2) {
     bank.push(
       challenge('Triangular', `T(${6 + (n % 7)}) = ?`, triangular(6 + (n % 7)), [triangular(5 + (n % 7)), triangular(6 + (n % 7)) + 6, triangular(6 + (n % 7)) - 3]),
       challenge('Modulo', `${n * 7 + 5} mod ${5 + (missions % 5)} = ?`, (n * 7 + 5) % (5 + (missions % 5)), [((n * 7 + 5) % (5 + (missions % 5))) + 1, Math.max(0, ((n * 7 + 5) % (5 + (missions % 5))) - 1), 5 + (missions % 5)])
     );
   }
-
   if (level >= 3) {
     const a = 2 + (n % 5);
     const x = 3 + (missions % 8);
@@ -245,10 +450,11 @@ function makeNumberChallenge(type = 'practice') {
       challenge('Prime Gap', `Prime gap after ${previousPrime(n + 20)}?`, nextPrimeAfter(previousPrime(n + 20)) - previousPrime(n + 20), [2, 4, 6, 8])
     );
   }
-
   currentChallenge = bank[(n + type.length + level) % bank.length];
   els.challengeType.textContent = currentChallenge.type;
   els.challengeLevel.textContent = `Level ${level}: ${state.numberLevel}`;
+  els.heroChallengeType.textContent = `${currentChallenge.type} | Level ${level}`;
+  els.heroChallengeLine.textContent = currentChallenge.q;
   els.numberQuestion.textContent = currentChallenge.q;
   renderNumberChoices(currentChallenge);
   spawnNumberTrail([currentChallenge.a, ...currentChallenge.w], 'math');
@@ -260,26 +466,13 @@ function challenge(type, q, a, w) {
 
 function renderNumberChoices(challengeData) {
   els.numberChoices.innerHTML = '';
-  const choices = makeChoices(challengeData.a, challengeData.w);
-  choices.forEach((answer) => {
+  makeChoices(challengeData.a, challengeData.w).forEach((answer) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.textContent = answer;
     button.addEventListener('click', () => answerNumber(answer, button));
     els.numberChoices.appendChild(button);
   });
-}
-
-function makeChoices(answer, wrong) {
-  const values = [answer, ...wrong];
-  let step = 1;
-  while ([...new Set(values)].length < 4) {
-    values.push(answer + step);
-    values.push(Math.max(0, answer - step));
-    values.push(answer + step * 2);
-    step += 1;
-  }
-  return shuffle([...new Set(values)]).slice(0, 4);
 }
 
 function answerNumber(answer, button) {
@@ -297,7 +490,7 @@ function answerNumber(answer, button) {
     saveState();
     render();
     button.classList.add('correct');
-    showToast(`Correct. Combo ${state.combo}. +${bonus} prime sticker${bonus > 1 ? 's' : ''}.`);
+    showToast(`Correct. Combo ${state.combo}. +${bonus} prime credit${bonus > 1 ? 's' : ''}.`);
     flash('teal');
     burstDigits(smartSequence(state.stickers + state.combo));
     fanfare();
@@ -310,6 +503,18 @@ function answerNumber(answer, button) {
     ping(160);
   }
   setTimeout(() => makeNumberChallenge('practice'), 850);
+}
+
+function makeChoices(answer, wrong) {
+  const values = [answer, ...wrong];
+  let step = 1;
+  while ([...new Set(values)].length < 4) {
+    values.push(answer + step);
+    values.push(Math.max(0, answer - step));
+    values.push(answer + step * 2);
+    step += 1;
+  }
+  return shuffle([...new Set(values)]).slice(0, 4);
 }
 
 function levelRank() {
@@ -325,8 +530,7 @@ function effectsOn(kind) {
 
 function spawnNumberTrail(values, type) {
   if (!effectsOn('trail')) return;
-  const list = values.slice(0, 14);
-  list.forEach((value, index) => {
+  values.slice(0, 14).forEach((value, index) => {
     const node = document.createElement('span');
     node.className = `trail-number ${type}`;
     node.textContent = value;
@@ -340,9 +544,8 @@ function spawnNumberTrail(values, type) {
 
 function burstDigits(values) {
   if (!effectsOn('trail')) return;
-  const list = values.slice(0, 18);
   const scene = $('scene').getBoundingClientRect();
-  list.forEach((value, index) => {
+  values.slice(0, 18).forEach((value, index) => {
     const node = document.createElement('span');
     node.className = 'burst-number';
     node.textContent = value;
@@ -435,6 +638,38 @@ function smartSequence(seed) {
   return Array.from({ length: 12 }, (_, i) => (i + start) ** 2);
 }
 
+function randomComposite(min, max) {
+  let n = rnd(min, max);
+  while (isPrime(n)) n = rnd(min, max);
+  return n;
+}
+
+function randomNonFactor(target) {
+  let n = rnd(2, Math.min(99, target + 28));
+  while (target % n === 0) n = rnd(2, Math.min(99, target + 28));
+  return n;
+}
+
+function randomNonMember(list, min, max) {
+  let n = rnd(min, max);
+  while (list.includes(n)) n = rnd(min, max);
+  return n;
+}
+
+function randomNonMultiple(base) {
+  let n = rnd(2, 99);
+  while (n % base === 0) n = rnd(2, 99);
+  return n;
+}
+
+function rnd(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function pick(list) {
+  return list[rnd(0, list.length - 1)];
+}
+
 function shuffle(items) {
   return items
     .filter((value) => Number.isFinite(value))
@@ -471,13 +706,14 @@ function fanfare() {
 function scheduleReminder() {
   clearTimeout(reminderTimer);
   reminderTimer = setTimeout(() => {
+    if (game.active) return scheduleReminder();
     state.signal = Math.min(96, state.signal + 30);
     saveState();
     render();
     els.icon.textContent = 'SCAN';
     els.title.textContent = 'Body scan time';
-    els.text.textContent = 'Pause, breathe, and choose what your body is saying.';
-    showToast('Body scan time.');
+    els.text.textContent = 'Pause, breathe, and choose a run.';
+    setBanner('Body scan time', 'Pick a signal run when ready.');
     ping(240);
   }, state.reminder * 60 * 1000);
 }
@@ -490,18 +726,18 @@ function bindEvents() {
     state.signal = Math.min(100, state.signal + 14);
     saveState();
     render();
-    showToast('Body scan: choose the closest signal.');
+    setBanner('Body scan', 'Choose the closest signal run.');
     spawnNumberTrail(smartSequence(state.signal), 'scan');
   });
-  $('newNumberBtn').addEventListener('click', () => makeNumberChallenge('practice'));
+  $('newNumberBtn').addEventListener('click', () => startGame('calm'));
   $('resetRoundBtn').addEventListener('click', () => {
+    stopGame(true);
     state.signal = 18;
     saveState();
     els.icon.textContent = '?';
-    els.title.textContent = 'What does your body say?';
-    els.text.textContent = 'Pick a body signal. Then help the pop reach the potty.';
+    els.title.textContent = 'Choose a run';
+    els.text.textContent = 'Tap Prime, Factor, Fibo, or Rush to start a number run.';
     els.face.textContent = ':)';
-    els.floatLayer.innerHTML = '';
     render();
   });
   $('soundBtn').addEventListener('click', () => {
@@ -538,7 +774,8 @@ function bindEvents() {
     render();
   });
   $('resetAllBtn').addEventListener('click', () => {
-    if (!confirm('Reset Potty Time 2 progress?')) return;
+    if (!confirm('Reset Number Signal Lab progress?')) return;
+    stopGame(true);
     state = { ...defaultState, lastDay: dayStamp() };
     saveState();
     render();
@@ -552,6 +789,12 @@ function bindEvents() {
 bindEvents();
 render();
 makeNumberChallenge('practice');
+setTimeout(() => {
+  spawnNumberTrail(smartSequence(state.stickers + state.missions + 11), 'math');
+  flash('teal');
+}, 450);
 scheduleReminder();
+
+
 
 

@@ -1,17 +1,17 @@
 ﻿# Jaxon's Potty Time 2
 
-A separate static prototype for a calmer, more inviting potty game.
+A separate static prototype for a number-forward toilet approach game.
 
 ## Concept
 
-The app focuses on body-signal awareness instead of shame or alarms:
+The app focuses on body-signal awareness and toilet approach practice without shame or alarms:
 
-- Pick the closest body signal: pee, poop, maybe try, or all clear.
-- Tap the spawned drop/pop token to send it to the potty.
-- Earn stickers for noticing signals and completing potty missions.
+- Pick the closest signal run: bladder, bowel, approach, or number rush.
+- Tap correct moving numbers before the timer ends.
+- Earn prime credits for clearing number runs and approaching the toilet target.
 - Use the Number Lab for primes, factors, Fibonacci, triangular numbers, modulo, equations, prime gaps, and bonus sticker puzzles.
 - Turn on Trails or Trails + Flash for moving number effects and pointer-following prime trails.
-- Use the Adult panel for reminder timing, reward phrase, sound, and low stimulation mode.
+- Use the Adult panel for reminder timing, completion phrase, sound, level, effects, and low stimulation mode.
 
 ## Files
 
@@ -21,5 +21,6 @@ The app focuses on body-signal awareness instead of shame or alarms:
 - `manifest.json` - PWA metadata
 
 Open `index.html` directly or publish the folder with GitHub Pages.
+
 
 
