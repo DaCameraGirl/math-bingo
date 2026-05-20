@@ -99,6 +99,45 @@ h1 { font-size: clamp(1.35rem, 4vw, 2.35rem); line-height: 1.02; }
   box-shadow: 0 18px 40px var(--shadow);
 }
 .number-rain { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.number-orbit {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: min(330px, 76%);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+  animation: orbitSpin 13s linear infinite;
+}
+.number-orbit span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin: -19px;
+  border-radius: 50%;
+  background: rgba(21, 52, 59, 0.82);
+  border: 2px solid rgba(255,255,255,0.7);
+  color: #fff;
+  font-weight: 900;
+  box-shadow: 0 0 18px rgba(45,125,143,0.55);
+  animation: orbitCounter 13s linear infinite, orbitFlash 1.6s ease-in-out infinite alternate;
+}
+.number-orbit span:nth-child(1) { transform: rotate(0deg) translateX(150px) rotate(0deg); }
+.number-orbit span:nth-child(2) { transform: rotate(45deg) translateX(150px) rotate(-45deg); }
+.number-orbit span:nth-child(3) { transform: rotate(90deg) translateX(150px) rotate(-90deg); }
+.number-orbit span:nth-child(4) { transform: rotate(135deg) translateX(150px) rotate(-135deg); }
+.number-orbit span:nth-child(5) { transform: rotate(180deg) translateX(150px) rotate(-180deg); }
+.number-orbit span:nth-child(6) { transform: rotate(225deg) translateX(150px) rotate(-225deg); }
+.number-orbit span:nth-child(7) { transform: rotate(270deg) translateX(150px) rotate(-270deg); }
+.number-orbit span:nth-child(8) { transform: rotate(315deg) translateX(150px) rotate(-315deg); }
+@keyframes orbitSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes orbitCounter { to { rotate: -360deg; } }
+@keyframes orbitFlash { to { filter: brightness(1.55); box-shadow: 0 0 28px rgba(248,200,78,0.8); } }
 .window-scene {
   position: absolute;
   left: 7%; top: 8%;
@@ -274,6 +313,29 @@ h1 { font-size: clamp(1.35rem, 4vw, 2.35rem); line-height: 1.02; }
 }
 .mission-card h2 { font-size: clamp(1.15rem, 3vw, 1.55rem); }
 .mission-card p { margin-top: 8px; color: var(--muted); font-weight: 700; line-height: 1.4; }
+.hero-math {
+  margin-top: 12px;
+  border-radius: var(--radius);
+  background: #15343b;
+  color: #fff;
+  padding: 10px 12px;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.08), 0 0 22px rgba(45,125,143,0.22);
+}
+.hero-math span {
+  display: block;
+  color: #8fe6ff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.hero-math strong {
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(0.98rem, 2.5vw, 1.18rem);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
 .controls {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -484,7 +546,7 @@ menu button {
 @keyframes flashPop { 0% { opacity: 0; } 35% { opacity: 1; } 100% { opacity: 0; } }
 .low-stim *, .low-stim *::before, .low-stim *::after { animation: none !important; transition-duration: 0.01ms !important; }
 .low-stim body, body.low-stim { background: #eef6f2; }
-.low-stim .number-rain, .low-stim .flash-layer { display: none; }
+.low-stim .number-rain, .low-stim .flash-layer, .low-stim .number-orbit { display: none; }
 @media (max-width: 760px) {
   .topbar { grid-template-columns: 62px 1fr 62px; }
   .icon-btn { font-size: 0.78rem; }
@@ -502,6 +564,16 @@ menu button {
 @media (max-width: 420px) {
   .bathroom-scene { min-height: 372px; }
   .window-scene { transform: scale(0.82); transform-origin: top left; }
+  .number-orbit { width: 270px; top: 58%; }
+  .number-orbit span { width: 30px; height: 30px; margin: -15px; font-size: 0.82rem; }
+  .number-orbit span:nth-child(1) { transform: rotate(0deg) translateX(116px) rotate(0deg); }
+  .number-orbit span:nth-child(2) { transform: rotate(45deg) translateX(116px) rotate(-45deg); }
+  .number-orbit span:nth-child(3) { transform: rotate(90deg) translateX(116px) rotate(-90deg); }
+  .number-orbit span:nth-child(4) { transform: rotate(135deg) translateX(116px) rotate(-135deg); }
+  .number-orbit span:nth-child(5) { transform: rotate(180deg) translateX(116px) rotate(-180deg); }
+  .number-orbit span:nth-child(6) { transform: rotate(225deg) translateX(116px) rotate(-225deg); }
+  .number-orbit span:nth-child(7) { transform: rotate(270deg) translateX(116px) rotate(-270deg); }
+  .number-orbit span:nth-child(8) { transform: rotate(315deg) translateX(116px) rotate(-315deg); }
   .body-meter { position: absolute; left: 10px; right: 10px; top: 116px; width: auto; }
   .character { left: 4%; bottom: 42px; transform: scale(0.76); }
   .potty { right: 0; bottom: 28px; transform: scale(0.76); }
@@ -510,3 +582,5 @@ menu button {
   .status-strip { grid-template-columns: 1fr 1fr 1fr; }
   .status-strip strong { font-size: 1.18rem; }
 }
+
+
