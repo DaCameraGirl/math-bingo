@@ -17,14 +17,14 @@ const bingoLines = [
 const trackAnimals = ['Elephant', 'Zebra', 'Rhino', 'Giraffe', 'Panda', 'Otter', 'Tiger', 'Koala'];
 const trackMarks = ['hoof', 'pad', 'claw', 'trail', 'den', 'scat', 'nest', 'burrow'];
 const animalFacts = [
-  { animal: 'Elephant', fact: '4 legs', key: 'elephant' },
-  { animal: 'Spider', fact: '8 legs', key: 'spider' },
-  { animal: 'Starfish', fact: '5 arms', key: 'starfish' },
-  { animal: 'Insect', fact: '6 legs', key: 'insect' },
-  { animal: 'Octopus', fact: '8 arms', key: 'octopus' },
-  { animal: 'Bird', fact: '2 wings', key: 'bird' },
-  { animal: 'Rhino', fact: '1 horn clue', key: 'rhino' },
-  { animal: 'Crab', fact: '10 legs', key: 'crab' }
+{ animal: 'Elephant', fact: '4 legs', key: 'elephant', emoji: '🐘' },
+  { animal: 'Spider', fact: '8 legs', key: 'spider', emoji: '🕷️' },
+  { animal: 'Starfish', fact: '5 arms', key: 'starfish', emoji: '⭐' },
+  { animal: 'Insect', fact: '6 legs', key: 'insect', emoji: '🐛' },
+  { animal: 'Octopus', fact: '8 arms', key: 'octopus', emoji: '🐙' },
+  { animal: 'Bird', fact: '2 wings', key: 'bird', emoji: '🐦' },
+  { animal: 'Rhino', fact: '1 horn clue', key: 'rhino', emoji: '🦏' },
+  { animal: 'Crab', fact: '10 legs', key: 'crab', emoji: '🦀' }
 ];
 
 let state = load();
@@ -313,7 +313,7 @@ function newAnimalPuzzle() {
   animalFirst = null;
   const picks = shuffle(animalFacts).slice(0, 4);
   const cards = shuffle([
-    ...picks.map((item) => ({ kind: 'animal', label: item.animal, key: item.key })),
+          ...picks.map((item) => ({ kind: 'animal', label: item.animal, key: item.key, emoji: item.emoji })),
     ...picks.map((item) => ({ kind: 'fact', label: item.fact, key: item.key }))
   ]);
   const grid = $('animalGrid');
@@ -322,9 +322,10 @@ function newAnimalPuzzle() {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `animal-card ${card.kind}`;
-    button.textContent = card.label;
+        button.textContent = card.kind === 'animal' ? `${card.emoji} ${card.label}` : card.label;
     button.dataset.key = card.key;
     button.dataset.kind = card.kind;
+        button.dataset.emoji = card.emoji || '';
     button.addEventListener('click', () => chooseAnimalCard(button));
     grid.appendChild(button);
   });
