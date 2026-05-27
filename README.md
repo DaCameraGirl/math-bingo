@@ -1,4 +1,4 @@
-# 🎱 Math Bingo
+# 🎱 Math Bingo 
 
 A fun and educational **math-meets-bingo** browser game for kids! 🧮✨ Solve number clues, tap your board, and get BINGO! 🏆
 
